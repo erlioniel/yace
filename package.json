@@ -1,0 +1,26 @@
+{
+  "name": "yace",
+  "version": "0.1.0",
+  "description": "Just another canvas engine for experiments",
+  "url": "",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "developedBy": "V.Kryukov",
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "matchdep": "1.0.1",
+    "grunt-typescript": "0.8.0",
+    "grunt-contrib-clean": "1.0.0",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-contrib-nodeunit": "~0.4.1",
+    "grunt-contrib-uglify": "~0.5.0"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com//sdeering/npm-boilerplate/raw/master/LICENSE"
+    }
+  ]
+}
