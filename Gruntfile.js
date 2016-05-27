@@ -10,7 +10,26 @@ module.exports = function (grunt) {
 		typescript: {
 			base: {
 				src: ['src/**/*.ts'],
-				dest: 'build/raw/<%= pkg.name %>.js'
+				dest: 'build/raw/',
+				options: {
+					module: 'amd'
+				}
+			},
+			tests: {
+				src: ['tests/**/*.ts'],
+				dest: 'build/tests/',
+				options: {
+					module: 'commonjs'
+				}
+			}
+		},
+
+		bower: {
+			dev: {
+				dest: 'vendor/',
+				options: {
+					expand: true
+				}
 			}
 		},
 
@@ -24,12 +43,41 @@ module.exports = function (grunt) {
 			}
 		},
 
-		clean: ['build/']
+		mochaTest: {
+			tests: {
+				options: {
+					reporter: 'spec',
+					colors: true
+				},
+				src: ['build/tests/tests/**/*.js']
+			}
+		},
+
+		tsd: {
+			refresh: {
+				options: {
+					command: 'reinstall',
+					latest: true,
+					config: 'tsd.json',
+				}
+			}
+		},
+
+		clean: {
+			all: ['build'],
+			build: ['build/raw/', 'builds/dist/'],
+			tests: ['build/tests/']
+		}
 	});
 
 	grunt.registerTask('default', [
-		'clean',
-		'typescript',
-		'uglify'
+		'clean:build',
+		'typescript:base'
+	]);
+
+	grunt.registerTask('tests', [
+		'clean:tests',
+		'typescript:tests',
+		'mochaTest:tests'
 	]);
 };
