@@ -7,19 +7,21 @@ module.exports = function (grunt) {
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 
-		typescript: {
+		ts: {
 			base: {
 				src: ['src/**/*.ts'],
-				dest: 'build/raw/',
+				out: '<%= pkg.name %>.js',
 				options: {
-					module: 'amd'
+					module: "amd",
+					target: "es5"
 				}
 			},
 			tests: {
 				src: ['tests/**/*.ts'],
 				dest: 'build/tests/',
 				options: {
-					module: 'commonjs'
+					module: 'commonjs',
+					target: "es5"
 				}
 			}
 		},
@@ -38,8 +40,8 @@ module.exports = function (grunt) {
 				banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
 			},
 			build: {
-				src: 'build/raw/<%= pkg.name %>.js',
-				dest: 'build/dist/<%= pkg.name %>.min.js'
+				src: '<%= pkg.name %>.js',
+				dest: '<%= pkg.name %>.min.js'
 			}
 		},
 
@@ -72,12 +74,13 @@ module.exports = function (grunt) {
 
 	grunt.registerTask('default', [
 		'clean:build',
-		'typescript:base'
+		'ts:base',
+		'uglify'
 	]);
 
 	grunt.registerTask('tests', [
 		'clean:tests',
-		'typescript:tests',
+		'ts:tests',
 		'mochaTest:tests'
 	]);
 };
