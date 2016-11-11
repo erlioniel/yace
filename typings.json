@@ -1,0 +1,8 @@
+{
+  "globalDependencies": {
+    "assertion-error": "registry:dt/assertion-error#1.0.0+20160316155526",
+    "chai": "registry:dt/chai#3.4.0+20160601211834",
+    "jquery": "registry:dt/jquery#1.10.0+20160929162922",
+    "mocha": "registry:dt/mocha#2.2.5+20161028141524"
+  }
+}

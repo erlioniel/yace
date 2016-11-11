@@ -75,9 +75,12 @@ define("core/YaceBehavior", ["require", "exports"], function (require, exports) 
     var YaceBehavior = (function () {
         function YaceBehavior() {
         }
-        YaceBehavior.prototype.onEnable = function () { };
-        YaceBehavior.prototype.onUpdate = function () { };
-        YaceBehavior.prototype.onDisable = function () { };
+        YaceBehavior.prototype.onEnable = function () {
+        };
+        YaceBehavior.prototype.onUpdate = function () {
+        };
+        YaceBehavior.prototype.onDisable = function () {
+        };
         return YaceBehavior;
     }());
     exports.YaceBehavior = YaceBehavior;
@@ -86,8 +89,9 @@ define("core/YaceScene", ["require", "exports", "core/YaceObjectContainer"], fun
     "use strict";
     var YaceScene = (function (_super) {
         __extends(YaceScene, _super);
-        function YaceScene() {
-            _super.apply(this, arguments);
+        function YaceScene(canvas) {
+            _super.call(this);
+            this.canvas = canvas;
         }
         return YaceScene;
     }(YaceObjectContainer_2.YaceObjectContainer));

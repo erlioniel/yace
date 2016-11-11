@@ -2,11 +2,11 @@
  * Created by VladimirK on 27.05.2016.
  */
 export class Vector3 {
-    public x:number;
-    public y:number;
-    public z:number;
+    public x: number;
+    public y: number;
+    public z: number;
 
-    constructor(x:number, y:number, z:number) {
+    constructor(x: number, y: number, z: number) {
         this.x = x;
         this.y = y;
         this.z = z;

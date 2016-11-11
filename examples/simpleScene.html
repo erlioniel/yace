@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>YACE - Simple Scene</title>
+    <script language="javascript" src="../vendor/jquery/dist/jquery.min.js"></script>
+    <script language="javascript" src="../vendor/requirejs/require.js"></script>
+    <script language="javascript" src="../yace.js"></script>
+    <script language="javascript">
+        requirejs(['simpleScene'], function(Scene) {
+        	var scene = new Scene.SimpleScene();
+        	scene.test();
+        });
+    </script>
+</head>
+<body>
+    <h1>YACE - Simple Scene</h1>
+    <canvas width="500" height="300" id="canvas"></canvas>
+</body>
+</html>

@@ -5,7 +5,12 @@ import {YaceObject} from "./YaceObject";
 export abstract class YaceBehavior {
     public object: YaceObject;
 
-    onEnable(): void {}
-    onUpdate(): void {}
-    onDisable(): void {}
+    onEnable(): void {
+    }
+
+    onUpdate(): void {
+    }
+
+    onDisable(): void {
+    }
 }
