@@ -13,7 +13,7 @@ module.exports = function (grunt) {
 				out: '<%= pkg.name %>.js',
 				options: {
 					module: "amd",
-					moduleResolution: "classic",
+					declaration: true,
 					target: "es5"
 				}
 			},
@@ -21,9 +21,7 @@ module.exports = function (grunt) {
 				src: ['examples/**/*.ts'],
 				options: {
 					module: 'amd',
-					moduleResolution: "classic",
-					target: 'es5',
-					isolatedModules: true
+					target: 'es5'
 				}
 			},
 			tests: {
@@ -31,7 +29,6 @@ module.exports = function (grunt) {
 				dest: 'build/tests/',
 				options: {
 					module: 'commonjs',
-					moduleResolution: "classic",
 					target: "es5"
 				}
 			}
@@ -81,11 +78,12 @@ module.exports = function (grunt) {
 	});
 
 	grunt.registerTask('dev-build', [
-		'ts:base'
+		'ts:base',
+		'ts:examples'
 	]);
 
 	grunt.registerTask('prod-build', [
-		'default',
+		'dev-build',
 		'uglify'
 	]);
 

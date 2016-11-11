@@ -1,9 +1,11 @@
+/// <reference path="../typings/index.d.ts" />
+/// <reference path="../yace.d.ts" />
+
+import {YaceScene} from "core/YaceScene";
+import {YaceObject} from "core/YaceObject";
 /**
  * Created by VladimirK on 11.06.2016.
  */
-/// <reference path="../typings/index.d.ts" />
-import {YaceScene} from "../src/core/YaceScene";
-import {YaceObject} from "../src/core/YaceObject";
 
 declare let $: JQueryStatic;
 
