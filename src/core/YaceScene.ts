@@ -1,28 +1,41 @@
 /// <reference path="../../typings/index.d.ts" />
+import {YaceContainer} from "./YaceContainer";
+import {YaceCamera} from "./YaceCamera";
 
-import {YaceObjectContainer} from "./YaceObjectContainer";
-import {Drawable} from "./interfaces/Drawable";
-
-export class YaceScene extends YaceObjectContainer implements Drawable {
+export class YaceScene extends YaceContainer {
 
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
 
-    constructor(canvas: HTMLCanvasElement) {
+    private cameras: YaceCamera[] = [];
+
+    constructor(width: number, height: number) {
         super();
 
-        this.canvas = canvas;
+        this.canvas = document.createElement("canvas");
+        this.canvas.width = width;
+        this.canvas.height = height;
         this.context = this.canvas.getContext("2d");
 
-        setInterval(function () {
-            this.draw(this.context);
-            this.onUpdate();
-        }.bind(this), 1000);
+        setInterval(this.onUpdate.bind(this), 1000);
     }
 
-    draw(context: CanvasRenderingContext2D): void {
-        for (let child of this.childs) {
-            child.draw(context);
+    public onUpdate() {
+        super.onUpdate();
+
+        for (let camera of this.cameras) {
+            camera.draw(this, this.context);
+        }
+    }
+
+    public addCamera(camera: YaceCamera): void {
+        this.cameras.push(camera);
+    }
+
+    public removeCamera(camera: YaceCamera): void {
+        let start = this.cameras.indexOf(camera);
+        if (start >= 0) {
+            this.cameras.splice(start, 1);
         }
     }
 }

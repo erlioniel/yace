@@ -1,5 +1,6 @@
 import {YaceBehavior} from "../core/YaceBehavior";
 import {Drawable} from "../core/interfaces/Drawable";
+import {YaceScene} from "../core/YaceScene";
 
 export class ImageRenderer extends YaceBehavior implements Drawable {
     private image: HTMLImageElement;
@@ -17,7 +18,7 @@ export class ImageRenderer extends YaceBehavior implements Drawable {
         };
     }
 
-    draw(context: CanvasRenderingContext2D): void {
+    draw(scene: YaceScene, context: CanvasRenderingContext2D): void {
         context.drawImage(
             this.image,
             0,

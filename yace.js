@@ -3,48 +3,19 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define("core/interfaces/Drawable", ["require", "exports"], function (require, exports) {
-    "use strict";
-});
 define("core/interfaces/LifeCycle", ["require", "exports"], function (require, exports) {
     "use strict";
 });
-define("core/YaceObjectContainer", ["require", "exports"], function (require, exports) {
+define("core/YaceBehavior", ["require", "exports"], function (require, exports) {
     "use strict";
-    var YaceObjectContainer = (function () {
-        function YaceObjectContainer() {
-            this.childs = [];
+    var YaceBehavior = (function () {
+        function YaceBehavior() {
         }
-        YaceObjectContainer.prototype.add = function (obj) {
-            this.childs.push(obj);
+        YaceBehavior.prototype.onUpdate = function () {
         };
-        YaceObjectContainer.prototype.remove = function (obj) {
-            var start = this.childs.indexOf(obj);
-            if (start >= 1) {
-                this.childs.slice(start, 1);
-            }
-        };
-        YaceObjectContainer.prototype.onEnable = function () {
-            for (var _i = 0, _a = this.childs; _i < _a.length; _i++) {
-                var child = _a[_i];
-                child.onEnable();
-            }
-        };
-        YaceObjectContainer.prototype.onUpdate = function () {
-            for (var _i = 0, _a = this.childs; _i < _a.length; _i++) {
-                var child = _a[_i];
-                child.onUpdate();
-            }
-        };
-        YaceObjectContainer.prototype.onDisable = function () {
-            for (var _i = 0, _a = this.childs; _i < _a.length; _i++) {
-                var child = _a[_i];
-                child.onDisable();
-            }
-        };
-        return YaceObjectContainer;
+        return YaceBehavior;
     }());
-    exports.YaceObjectContainer = YaceObjectContainer;
+    exports.YaceBehavior = YaceBehavior;
 });
 define("utils/Point2D", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -69,7 +40,7 @@ define("utils/Point2D", ["require", "exports"], function (require, exports) {
     }());
     exports.Point2D = Point2D;
 });
-define("core/YaceObject", ["require", "exports", "core/YaceObjectContainer", "utils/Point2D"], function (require, exports, YaceObjectContainer_1, Point2D_1) {
+define("core/YaceObject", ["require", "exports", "core/YaceContainer", "utils/Point2D"], function (require, exports, YaceContainer_1, Point2D_1) {
     "use strict";
     var YaceObject = (function (_super) {
         __extends(YaceObject, _super);
@@ -88,14 +59,7 @@ define("core/YaceObject", ["require", "exports", "core/YaceObjectContainer", "ut
             behavior.object = null;
             var start = this.behaviors.indexOf(behavior);
             if (start >= 0) {
-                this.behaviors.slice(start, 1);
-            }
-        };
-        YaceObject.prototype.onEnable = function () {
-            _super.prototype.onEnable.call(this);
-            for (var _i = 0, _a = this.behaviors; _i < _a.length; _i++) {
-                var behavior = _a[_i];
-                behavior.onEnable();
+                this.behaviors.splice(start, 1);
             }
         };
         YaceObject.prototype.onUpdate = function () {
@@ -105,17 +69,10 @@ define("core/YaceObject", ["require", "exports", "core/YaceObjectContainer", "ut
                 behavior.onUpdate();
             }
         };
-        YaceObject.prototype.onDisable = function () {
-            _super.prototype.onDisable.call(this);
-            for (var _i = 0, _a = this.behaviors; _i < _a.length; _i++) {
-                var behavior = _a[_i];
-                behavior.onDisable();
-            }
-        };
-        YaceObject.prototype.draw = function (context) {
+        YaceObject.prototype.draw = function (scene, context) {
             for (var _i = 0, _a = this.childs; _i < _a.length; _i++) {
                 var child = _a[_i];
-                child.draw(context);
+                child.draw(scene, context);
             }
             for (var _b = 0, _c = this.behaviors; _b < _c.length; _b++) {
                 var behavior = _c[_b];
@@ -123,50 +80,93 @@ define("core/YaceObject", ["require", "exports", "core/YaceObjectContainer", "ut
                 if (typeof (drawable.draw) === "undefined") {
                     continue;
                 }
-                drawable.draw(context);
+                drawable.draw(scene, context);
             }
         };
         return YaceObject;
-    }(YaceObjectContainer_1.YaceObjectContainer));
+    }(YaceContainer_1.YaceContainer));
     exports.YaceObject = YaceObject;
 });
-define("core/YaceBehavior", ["require", "exports"], function (require, exports) {
+define("core/YaceContainer", ["require", "exports"], function (require, exports) {
     "use strict";
-    var YaceBehavior = (function () {
-        function YaceBehavior() {
+    var YaceContainer = (function () {
+        function YaceContainer() {
+            this.childs = [];
         }
-        YaceBehavior.prototype.onEnable = function () {
+        YaceContainer.prototype.add = function (obj) {
+            this.childs.push(obj);
         };
-        YaceBehavior.prototype.onUpdate = function () {
+        YaceContainer.prototype.remove = function (obj) {
+            var start = this.childs.indexOf(obj);
+            if (start >= 1) {
+                this.childs.slice(start, 1);
+            }
         };
-        YaceBehavior.prototype.onDisable = function () {
+        YaceContainer.prototype.onUpdate = function () {
+            for (var _i = 0, _a = this.childs; _i < _a.length; _i++) {
+                var child = _a[_i];
+                child.onUpdate();
+            }
         };
-        return YaceBehavior;
+        return YaceContainer;
     }());
-    exports.YaceBehavior = YaceBehavior;
+    exports.YaceContainer = YaceContainer;
 });
-define("core/YaceScene", ["require", "exports", "core/YaceObjectContainer"], function (require, exports, YaceObjectContainer_2) {
+define("core/YaceCamera", ["require", "exports", "core/YaceObject"], function (require, exports, YaceObject_1) {
     "use strict";
-    var YaceScene = (function (_super) {
-        __extends(YaceScene, _super);
-        function YaceScene(canvas) {
+    var YaceCamera = (function (_super) {
+        __extends(YaceCamera, _super);
+        function YaceCamera(canvas) {
             _super.call(this);
             this.canvas = canvas;
             this.context = this.canvas.getContext("2d");
-            setInterval(function () {
-                this.draw(this.context);
-                this.onUpdate();
-            }.bind(this), 1000);
         }
-        YaceScene.prototype.draw = function (context) {
-            for (var _i = 0, _a = this.childs; _i < _a.length; _i++) {
+        YaceCamera.prototype.draw = function (scene, context) {
+            console.log("Draw?");
+            for (var _i = 0, _a = scene.childs; _i < _a.length; _i++) {
                 var child = _a[_i];
-                child.draw(context);
+                child.draw(scene, this.context);
+            }
+        };
+        return YaceCamera;
+    }(YaceObject_1.YaceObject));
+    exports.YaceCamera = YaceCamera;
+});
+define("core/YaceScene", ["require", "exports", "core/YaceContainer"], function (require, exports, YaceContainer_2) {
+    "use strict";
+    var YaceScene = (function (_super) {
+        __extends(YaceScene, _super);
+        function YaceScene(width, height) {
+            _super.call(this);
+            this.cameras = [];
+            this.canvas = document.createElement("canvas");
+            this.canvas.width = width;
+            this.canvas.height = height;
+            this.context = this.canvas.getContext("2d");
+            setInterval(this.onUpdate.bind(this), 1000);
+        }
+        YaceScene.prototype.onUpdate = function () {
+            _super.prototype.onUpdate.call(this);
+            for (var _i = 0, _a = this.cameras; _i < _a.length; _i++) {
+                var camera = _a[_i];
+                camera.draw(this, this.context);
+            }
+        };
+        YaceScene.prototype.addCamera = function (camera) {
+            this.cameras.push(camera);
+        };
+        YaceScene.prototype.removeCamera = function (camera) {
+            var start = this.cameras.indexOf(camera);
+            if (start >= 0) {
+                this.cameras.splice(start, 1);
             }
         };
         return YaceScene;
-    }(YaceObjectContainer_2.YaceObjectContainer));
+    }(YaceContainer_2.YaceContainer));
     exports.YaceScene = YaceScene;
+});
+define("core/interfaces/Drawable", ["require", "exports"], function (require, exports) {
+    "use strict";
 });
 define("renders/ImageRenderer", ["require", "exports", "core/YaceBehavior"], function (require, exports, YaceBehavior_1) {
     "use strict";
@@ -182,11 +182,22 @@ define("renders/ImageRenderer", ["require", "exports", "core/YaceBehavior"], fun
                 that.height = that.height || this.height;
             };
         }
-        ImageRenderer.prototype.draw = function (context) {
+        ImageRenderer.prototype.draw = function (scene, context) {
             context.drawImage(this.image, 0, 0, this.width, this.height, this.object.position.x * this.object.scale.x, this.object.position.y * this.object.scale.y, this.width * this.object.scale.x, this.height * this.object.scale.y);
         };
         return ImageRenderer;
     }(YaceBehavior_1.YaceBehavior));
     exports.ImageRenderer = ImageRenderer;
+});
+define("utils/Box2D", ["require", "exports"], function (require, exports) {
+    "use strict";
+    var Box2D = (function () {
+        function Box2D(lt, rb) {
+            this.lt = lt;
+            this.rb = rb;
+        }
+        return Box2D;
+    }());
+    exports.Box2D = Box2D;
 });
 //# sourceMappingURL=yace.js.map

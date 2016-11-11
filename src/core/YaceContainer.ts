@@ -1,8 +1,8 @@
 import {YaceObject} from "./YaceObject";
 import {LifeCycle} from "./interfaces/LifeCycle";
 
-export abstract class YaceObjectContainer implements LifeCycle {
-    protected childs: YaceObject[] = [];
+export abstract class YaceContainer implements LifeCycle {
+    public childs: YaceObject[] = [];
 
     public add(obj: YaceObject): void {
         this.childs.push(obj);
@@ -15,21 +15,9 @@ export abstract class YaceObjectContainer implements LifeCycle {
         }
     }
 
-    onEnable(): void {
-        for (let child of this.childs) {
-            child.onEnable();
-        }
-    }
-
     onUpdate(): void {
         for (let child of this.childs) {
             child.onUpdate();
-        }
-    }
-
-    onDisable(): void {
-        for (let child of this.childs) {
-            child.onDisable();
         }
     }
 }

@@ -1,26 +1,15 @@
 /// <reference path="typings/index.d.ts" />
-declare module "core/interfaces/Drawable" {
-    export interface Drawable {
-        draw(context: CanvasRenderingContext2D): void;
-    }
-}
 declare module "core/interfaces/LifeCycle" {
     export interface LifeCycle {
-        onEnable(): void;
         onUpdate(): void;
-        onDisable(): void;
     }
 }
-declare module "core/YaceObjectContainer" {
+declare module "core/YaceBehavior" {
     import { YaceObject } from "core/YaceObject";
     import { LifeCycle } from "core/interfaces/LifeCycle";
-    export abstract class YaceObjectContainer implements LifeCycle {
-        protected childs: YaceObject[];
-        add(obj: YaceObject): void;
-        remove(obj: YaceObject): void;
-        onEnable(): void;
+    export abstract class YaceBehavior implements LifeCycle {
+        object: YaceObject;
         onUpdate(): void;
-        onDisable(): void;
     }
 }
 declare module "utils/Point2D" {
@@ -35,51 +24,78 @@ declare module "utils/Point2D" {
     }
 }
 declare module "core/YaceObject" {
-    import { YaceObjectContainer } from "core/YaceObjectContainer";
+    import { YaceContainer } from "core/YaceContainer";
     import { YaceBehavior } from "core/YaceBehavior";
     import { Drawable } from "core/interfaces/Drawable";
     import { Point2D } from "utils/Point2D";
-    export class YaceObject extends YaceObjectContainer implements Drawable {
+    import { YaceScene } from "core/YaceScene";
+    export class YaceObject extends YaceContainer implements Drawable {
         behaviors: YaceBehavior[];
         position: Point2D;
         rotation: Point2D;
         scale: Point2D;
         addBehavior(behavior: YaceBehavior): void;
         removeBehavior(behavior: YaceBehavior): void;
-        onEnable(): void;
         onUpdate(): void;
-        onDisable(): void;
-        draw(context: CanvasRenderingContext2D): void;
+        draw(scene: YaceScene, context: CanvasRenderingContext2D): void;
     }
 }
-declare module "core/YaceBehavior" {
+declare module "core/YaceContainer" {
     import { YaceObject } from "core/YaceObject";
     import { LifeCycle } from "core/interfaces/LifeCycle";
-    export abstract class YaceBehavior implements LifeCycle {
-        object: YaceObject;
-        onEnable(): void;
+    export abstract class YaceContainer implements LifeCycle {
+        childs: YaceObject[];
+        add(obj: YaceObject): void;
+        remove(obj: YaceObject): void;
         onUpdate(): void;
-        onDisable(): void;
     }
 }
-declare module "core/YaceScene" {
-    import { YaceObjectContainer } from "core/YaceObjectContainer";
-    import { Drawable } from "core/interfaces/Drawable";
-    export class YaceScene extends YaceObjectContainer implements Drawable {
+declare module "core/YaceCamera" {
+    import { YaceObject } from "core/YaceObject";
+    import { YaceScene } from "core/YaceScene";
+    export class YaceCamera extends YaceObject {
         private canvas;
         private context;
         constructor(canvas: HTMLCanvasElement);
-        draw(context: CanvasRenderingContext2D): void;
+        draw(scene: YaceScene, context: CanvasRenderingContext2D): void;
+    }
+}
+declare module "core/YaceScene" {
+    import { YaceContainer } from "core/YaceContainer";
+    import { YaceCamera } from "core/YaceCamera";
+    export class YaceScene extends YaceContainer {
+        private canvas;
+        private context;
+        private cameras;
+        constructor(width: number, height: number);
+        onUpdate(): void;
+        addCamera(camera: YaceCamera): void;
+        removeCamera(camera: YaceCamera): void;
+    }
+}
+declare module "core/interfaces/Drawable" {
+    import { YaceScene } from "core/YaceScene";
+    export interface Drawable {
+        draw(scene: YaceScene, context: CanvasRenderingContext2D): void;
     }
 }
 declare module "renders/ImageRenderer" {
     import { YaceBehavior } from "core/YaceBehavior";
     import { Drawable } from "core/interfaces/Drawable";
+    import { YaceScene } from "core/YaceScene";
     export class ImageRenderer extends YaceBehavior implements Drawable {
         private image;
         private width;
         private height;
         constructor(url: string);
-        draw(context: CanvasRenderingContext2D): void;
+        draw(scene: YaceScene, context: CanvasRenderingContext2D): void;
+    }
+}
+declare module "utils/Box2D" {
+    import { Point2D } from "utils/Point2D";
+    export class Box2D {
+        lt: Point2D;
+        rb: Point2D;
+        constructor(lt: Point2D, rb: Point2D);
     }
 }

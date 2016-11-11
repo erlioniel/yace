@@ -1,9 +1,10 @@
-import {YaceObjectContainer} from "./YaceObjectContainer";
+import {YaceContainer} from "./YaceContainer";
 import {YaceBehavior} from "./YaceBehavior";
 import {Drawable} from "./interfaces/Drawable";
 import {Point2D} from "../utils/Point2D";
+import {YaceScene} from "./YaceScene";
 
-export class YaceObject extends YaceObjectContainer implements Drawable {
+export class YaceObject extends YaceContainer implements Drawable {
 
     public behaviors: YaceBehavior[] = [];
 
@@ -20,14 +21,7 @@ export class YaceObject extends YaceObjectContainer implements Drawable {
         behavior.object = null;
         let start = this.behaviors.indexOf(behavior);
         if (start >= 0) {
-            this.behaviors.slice(start, 1);
-        }
-    }
-
-    onEnable(): void {
-        super.onEnable();
-        for (let behavior of this.behaviors) {
-            behavior.onEnable();
+            this.behaviors.splice(start, 1);
         }
     }
 
@@ -38,16 +32,9 @@ export class YaceObject extends YaceObjectContainer implements Drawable {
         }
     }
 
-    onDisable(): void {
-        super.onDisable();
-        for (let behavior of this.behaviors) {
-            behavior.onDisable();
-        }
-    }
-
-    draw(context: CanvasRenderingContext2D): void {
+    draw(scene: YaceScene, context: CanvasRenderingContext2D): void {
         for (let child of this.childs) {
-            child.draw(context);
+            child.draw(scene, context);
         }
 
         for (let behavior of this.behaviors) {
@@ -56,7 +43,7 @@ export class YaceObject extends YaceObjectContainer implements Drawable {
                 continue;
             }
 
-            drawable.draw(context);
+            drawable.draw(scene, context);
         }
     }
 }
