@@ -31,6 +31,7 @@ define("core/YaceObjectContainer", ["require", "exports"], function (require, ex
     "use strict";
     var YaceObjectContainer = (function () {
         function YaceObjectContainer() {
+            this.childs = [];
         }
         YaceObjectContainer.prototype.add = function (obj) {
             this.childs.push(obj);
@@ -51,6 +52,7 @@ define("core/YaceObject", ["require", "exports", "utils/Vector3", "core/YaceObje
         __extends(YaceObject, _super);
         function YaceObject() {
             _super.apply(this, arguments);
+            this.behaviors = [];
             this.position = new Vector3_1.Vector3(0, 0, 0);
             this.rotation = new Vector3_1.Vector3(0, 0, 0);
             this.scale = new Vector3_1.Vector3(1, 1, 1);
