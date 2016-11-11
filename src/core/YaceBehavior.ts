@@ -1,9 +1,8 @@
 import {YaceObject} from "./YaceObject";
-/**
- * Created by VladimirK on 27.05.2016.
- */
-export abstract class YaceBehavior {
-    public object: YaceObject;
+import {LifeCycle} from "./interfaces/LifeCycle";
+
+export abstract class YaceBehavior implements LifeCycle {
+    protected object: YaceObject;
 
     onEnable(): void {
     }

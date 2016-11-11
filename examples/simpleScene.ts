@@ -3,16 +3,16 @@
 
 import {YaceScene} from "core/YaceScene";
 import {YaceObject} from "core/YaceObject";
-/**
- * Created by VladimirK on 11.06.2016.
- */
+import {ImageRenderer} from "renders/ImageRenderer";
 
 declare let $: JQueryStatic;
 
 export class SimpleScene {
     public test(): void {
         let canvas = $('#canvas');
-        let scene = new YaceScene(canvas);
-        scene.add(new YaceObject());
+        let scene = new YaceScene(<HTMLCanvasElement>canvas.get(0));
+        let sprite = new YaceObject();
+        sprite.addBehavior(new ImageRenderer('images/train.jpg'));
+        scene.add(sprite);
     }
 }

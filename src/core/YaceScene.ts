@@ -1,16 +1,28 @@
 /// <reference path="../../typings/index.d.ts" />
 
 import {YaceObjectContainer} from "./YaceObjectContainer";
-/**
- * Created by VladimirK on 27.05.2016.
- */
-export class YaceScene extends YaceObjectContainer {
+import {Drawable} from "./interfaces/Drawable";
 
-    private canvas: JQuery;
+export class YaceScene extends YaceObjectContainer implements Drawable {
 
-    constructor(canvas: JQuery) {
+    private canvas: HTMLCanvasElement;
+    private context: CanvasRenderingContext2D;
+
+    constructor(canvas: HTMLCanvasElement) {
         super();
 
         this.canvas = canvas;
+        this.context = this.canvas.getContext("2d");
+
+        setInterval(function () {
+            this.draw(this.context);
+            this.onUpdate();
+        }.bind(this), 1000);
+    }
+
+    draw(context: CanvasRenderingContext2D): void {
+        for (let child of this.childs) {
+            child.draw(context);
+        }
     }
 }

@@ -13,6 +13,7 @@ module.exports = function (grunt) {
 				out: '<%= pkg.name %>.js',
 				options: {
 					module: "amd",
+					moduleResolution: 'classic',
 					declaration: true,
 					target: "es5"
 				}

@@ -3,6 +3,12 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+define("core/interfaces/Drawable", ["require", "exports"], function (require, exports) {
+    "use strict";
+});
+define("core/interfaces/LifeCycle", ["require", "exports"], function (require, exports) {
+    "use strict";
+});
 define("utils/Vector3", ["require", "exports"], function (require, exports) {
     "use strict";
     var Vector3 = (function () {
@@ -42,6 +48,24 @@ define("core/YaceObjectContainer", ["require", "exports"], function (require, ex
                 this.childs.slice(start, 1);
             }
         };
+        YaceObjectContainer.prototype.onEnable = function () {
+            for (var _i = 0, _a = this.childs; _i < _a.length; _i++) {
+                var child = _a[_i];
+                child.onEnable();
+            }
+        };
+        YaceObjectContainer.prototype.onUpdate = function () {
+            for (var _i = 0, _a = this.childs; _i < _a.length; _i++) {
+                var child = _a[_i];
+                child.onUpdate();
+            }
+        };
+        YaceObjectContainer.prototype.onDisable = function () {
+            for (var _i = 0, _a = this.childs; _i < _a.length; _i++) {
+                var child = _a[_i];
+                child.onDisable();
+            }
+        };
         return YaceObjectContainer;
     }());
     exports.YaceObjectContainer = YaceObjectContainer;
@@ -66,6 +90,41 @@ define("core/YaceObject", ["require", "exports", "utils/Vector3", "core/YaceObje
             var start = this.behaviors.indexOf(behavior);
             if (start >= 0) {
                 this.behaviors.slice(start, 1);
+            }
+        };
+        YaceObject.prototype.onEnable = function () {
+            _super.prototype.onEnable.call(this);
+            for (var _i = 0, _a = this.behaviors; _i < _a.length; _i++) {
+                var behavior = _a[_i];
+                behavior.onEnable();
+            }
+        };
+        YaceObject.prototype.onUpdate = function () {
+            _super.prototype.onUpdate.call(this);
+            for (var _i = 0, _a = this.behaviors; _i < _a.length; _i++) {
+                var behavior = _a[_i];
+                behavior.onUpdate();
+            }
+        };
+        YaceObject.prototype.onDisable = function () {
+            _super.prototype.onDisable.call(this);
+            for (var _i = 0, _a = this.behaviors; _i < _a.length; _i++) {
+                var behavior = _a[_i];
+                behavior.onDisable();
+            }
+        };
+        YaceObject.prototype.draw = function (context) {
+            for (var _i = 0, _a = this.childs; _i < _a.length; _i++) {
+                var child = _a[_i];
+                child.draw(context);
+            }
+            for (var _b = 0, _c = this.behaviors; _b < _c.length; _b++) {
+                var behavior = _c[_b];
+                var drawable = behavior;
+                if (typeof (drawable.draw) === "undefined") {
+                    continue;
+                }
+                drawable.draw(context);
             }
         };
         return YaceObject;
@@ -94,20 +153,45 @@ define("core/YaceScene", ["require", "exports", "core/YaceObjectContainer"], fun
         function YaceScene(canvas) {
             _super.call(this);
             this.canvas = canvas;
+            this.context = this.canvas.getContext("2d");
+            setInterval(function () {
+                this.draw(this.context);
+                this.onUpdate();
+            }.bind(this), 1000);
         }
+        YaceScene.prototype.draw = function (context) {
+            for (var _i = 0, _a = this.childs; _i < _a.length; _i++) {
+                var child = _a[_i];
+                child.draw(context);
+            }
+        };
         return YaceScene;
     }(YaceObjectContainer_2.YaceObjectContainer));
     exports.YaceScene = YaceScene;
 });
-define("renders/SpriteRender", ["require", "exports", "core/YaceBehavior"], function (require, exports, YaceBehavior_1) {
+define("renders/ImageRenderer", ["require", "exports", "core/YaceBehavior"], function (require, exports, YaceBehavior_1) {
     "use strict";
-    var SpriteRender = (function (_super) {
-        __extends(SpriteRender, _super);
-        function SpriteRender() {
-            _super.apply(this, arguments);
+    var ImageRenderer = (function (_super) {
+        __extends(ImageRenderer, _super);
+        function ImageRenderer(url) {
+            _super.call(this);
+            var that = this;
+            this.image = new Image();
+            this.image.src = url;
+            this.image.onload = function () {
+                that.width = that.width || this.width;
+                that.height = that.height || this.height;
+            };
         }
-        return SpriteRender;
+        ImageRenderer.prototype.onUpdate = function () {
+            console.log("Trying to update maybe?");
+        };
+        ImageRenderer.prototype.draw = function (context) {
+            console.log("Draw on canvas", context);
+            context.drawImage(this.image, 0, 0);
+        };
+        return ImageRenderer;
     }(YaceBehavior_1.YaceBehavior));
-    exports.SpriteRender = SpriteRender;
+    exports.ImageRenderer = ImageRenderer;
 });
 //# sourceMappingURL=yace.js.map
