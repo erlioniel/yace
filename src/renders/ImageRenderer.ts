@@ -21,7 +21,13 @@ export class ImageRenderer extends YaceBehavior implements Drawable {
         context.drawImage(
             this.image,
             0,
-            0
+            0,
+            this.width,
+            this.height,
+            this.object.position.x * this.object.scale.x,
+            this.object.position.y * this.object.scale.y,
+            this.width * this.object.scale.x,
+            this.height * this.object.scale.y
         );
     }
 }

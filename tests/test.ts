@@ -1,10 +1,10 @@
 /// <reference path="../typings/index.d.ts" />
 
 import chai = require('chai');
-import {Vector3} from "utils/Vector3";
-var assert = chai.assert;
+import {Point2D} from "../src/utils/Point2D";
+let assert = chai.assert;
 
-var vector3 = new Vector3(2,3,4);
+let vector3 = new Point2D(2, 3);
 describe('Vector', () => {
     it('has x', (done) => {
         assert.equal(vector3.x, 2);
@@ -12,10 +12,6 @@ describe('Vector', () => {
     });
     it('has y', (done) => {
         assert.equal(vector3.y, 3);
-        done();
-    });
-    it('has z', (done) => {
-        assert.equal(vector3.z, 4);
         done();
     });
 });

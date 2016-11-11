@@ -1,15 +1,15 @@
-import {Vector3} from "../utils/Vector3";
 import {YaceObjectContainer} from "./YaceObjectContainer";
 import {YaceBehavior} from "./YaceBehavior";
 import {Drawable} from "./interfaces/Drawable";
+import {Point2D} from "../utils/Point2D";
 
 export class YaceObject extends YaceObjectContainer implements Drawable {
 
     public behaviors: YaceBehavior[] = [];
 
-    public position: Vector3 = new Vector3(0, 0, 0);
-    public rotation: Vector3 = new Vector3(0, 0, 0);
-    public scale: Vector3 = new Vector3(1, 1, 1);
+    public position: Point2D = new Point2D(0, 0);
+    public rotation: Point2D = new Point2D(0, 0);
+    public scale: Point2D = new Point2D(1, 1);
 
     public addBehavior(behavior: YaceBehavior): void {
         this.behaviors.push(behavior);

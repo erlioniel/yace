@@ -11,18 +11,6 @@ declare module "core/interfaces/LifeCycle" {
         onDisable(): void;
     }
 }
-declare module "utils/Vector3" {
-    export class Vector3 {
-        x: number;
-        y: number;
-        z: number;
-        constructor(x: number, y: number, z: number);
-        static concat(v1: Vector3, v2: Vector3): Vector3;
-        static substract(v1: Vector3, v2: Vector3): Vector3;
-        static multiply(v1: Vector3, v2: Vector3): Vector3;
-        static divide(v1: Vector3, v2: Vector3): Vector3;
-    }
-}
 declare module "core/YaceObjectContainer" {
     import { YaceObject } from "core/YaceObject";
     import { LifeCycle } from "core/interfaces/LifeCycle";
@@ -35,16 +23,27 @@ declare module "core/YaceObjectContainer" {
         onDisable(): void;
     }
 }
+declare module "utils/Point2D" {
+    export class Point2D {
+        x: number;
+        y: number;
+        constructor(x: number, y: number);
+        static concat(v1: Point2D, v2: Point2D): Point2D;
+        static substract(v1: Point2D, v2: Point2D): Point2D;
+        static multiply(v1: Point2D, v2: Point2D): Point2D;
+        static divide(v1: Point2D, v2: Point2D): Point2D;
+    }
+}
 declare module "core/YaceObject" {
-    import { Vector3 } from "utils/Vector3";
     import { YaceObjectContainer } from "core/YaceObjectContainer";
     import { YaceBehavior } from "core/YaceBehavior";
     import { Drawable } from "core/interfaces/Drawable";
+    import { Point2D } from "utils/Point2D";
     export class YaceObject extends YaceObjectContainer implements Drawable {
         behaviors: YaceBehavior[];
-        position: Vector3;
-        rotation: Vector3;
-        scale: Vector3;
+        position: Point2D;
+        rotation: Point2D;
+        scale: Point2D;
         addBehavior(behavior: YaceBehavior): void;
         removeBehavior(behavior: YaceBehavior): void;
         onEnable(): void;
@@ -81,7 +80,6 @@ declare module "renders/ImageRenderer" {
         private width;
         private height;
         constructor(url: string);
-        onUpdate(): void;
         draw(context: CanvasRenderingContext2D): void;
     }
 }

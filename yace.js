@@ -9,30 +9,6 @@ define("core/interfaces/Drawable", ["require", "exports"], function (require, ex
 define("core/interfaces/LifeCycle", ["require", "exports"], function (require, exports) {
     "use strict";
 });
-define("utils/Vector3", ["require", "exports"], function (require, exports) {
-    "use strict";
-    var Vector3 = (function () {
-        function Vector3(x, y, z) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-        }
-        Vector3.concat = function (v1, v2) {
-            return new Vector3(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
-        };
-        Vector3.substract = function (v1, v2) {
-            return new Vector3(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
-        };
-        Vector3.multiply = function (v1, v2) {
-            return new Vector3(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z);
-        };
-        Vector3.divide = function (v1, v2) {
-            return new Vector3(v1.x / v2.x, v1.y / v2.y, v1.z / v2.z);
-        };
-        return Vector3;
-    }());
-    exports.Vector3 = Vector3;
-});
 define("core/YaceObjectContainer", ["require", "exports"], function (require, exports) {
     "use strict";
     var YaceObjectContainer = (function () {
@@ -70,16 +46,39 @@ define("core/YaceObjectContainer", ["require", "exports"], function (require, ex
     }());
     exports.YaceObjectContainer = YaceObjectContainer;
 });
-define("core/YaceObject", ["require", "exports", "utils/Vector3", "core/YaceObjectContainer"], function (require, exports, Vector3_1, YaceObjectContainer_1) {
+define("utils/Point2D", ["require", "exports"], function (require, exports) {
+    "use strict";
+    var Point2D = (function () {
+        function Point2D(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+        Point2D.concat = function (v1, v2) {
+            return new Point2D(v1.x + v2.x, v1.y + v2.y);
+        };
+        Point2D.substract = function (v1, v2) {
+            return new Point2D(v1.x - v2.x, v1.y - v2.y);
+        };
+        Point2D.multiply = function (v1, v2) {
+            return new Point2D(v1.x * v2.x, v1.y * v2.y);
+        };
+        Point2D.divide = function (v1, v2) {
+            return new Point2D(v1.x / v2.x, v1.y / v2.y);
+        };
+        return Point2D;
+    }());
+    exports.Point2D = Point2D;
+});
+define("core/YaceObject", ["require", "exports", "core/YaceObjectContainer", "utils/Point2D"], function (require, exports, YaceObjectContainer_1, Point2D_1) {
     "use strict";
     var YaceObject = (function (_super) {
         __extends(YaceObject, _super);
         function YaceObject() {
             _super.apply(this, arguments);
             this.behaviors = [];
-            this.position = new Vector3_1.Vector3(0, 0, 0);
-            this.rotation = new Vector3_1.Vector3(0, 0, 0);
-            this.scale = new Vector3_1.Vector3(1, 1, 1);
+            this.position = new Point2D_1.Point2D(0, 0);
+            this.rotation = new Point2D_1.Point2D(0, 0);
+            this.scale = new Point2D_1.Point2D(1, 1);
         }
         YaceObject.prototype.addBehavior = function (behavior) {
             this.behaviors.push(behavior);
@@ -183,12 +182,8 @@ define("renders/ImageRenderer", ["require", "exports", "core/YaceBehavior"], fun
                 that.height = that.height || this.height;
             };
         }
-        ImageRenderer.prototype.onUpdate = function () {
-            console.log("Trying to update maybe?");
-        };
         ImageRenderer.prototype.draw = function (context) {
-            console.log("Draw on canvas", context);
-            context.drawImage(this.image, 0, 0);
+            context.drawImage(this.image, 0, 0, this.width, this.height, this.object.position.x * this.object.scale.x, this.object.position.y * this.object.scale.y, this.width * this.object.scale.x, this.height * this.object.scale.y);
         };
         return ImageRenderer;
     }(YaceBehavior_1.YaceBehavior));
