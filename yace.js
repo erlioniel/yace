@@ -50,7 +50,6 @@ define("core/YaceObject", ["require", "exports", "core/YaceContainer", "utils/Po
             _super.apply(this, arguments);
             this.behaviors = [];
             this.position = new Point2D_1.default(0, 0);
-            this.rotation = new Point2D_1.default(0, 0);
             this.scale = new Point2D_1.default(1, 1);
         }
         YaceObject.prototype.addBehavior = function (behavior) {
@@ -126,11 +125,15 @@ define("core/YaceCamera", ["require", "exports", "core/YaceObject"], function (r
             this.context = this.canvas.getContext("2d");
         }
         YaceCamera.prototype.draw = function (scene, context) {
-            console.log("Draw?");
+            context.fillStyle = "#9ea7b8";
+            context.fillRect(0, 0, scene.canvas.width, scene.canvas.height);
             for (var _i = 0, _a = scene.childs; _i < _a.length; _i++) {
                 var child = _a[_i];
-                child.draw(scene, this.context);
+                child.draw(scene, context);
             }
+            this.context.fillStyle = "#000000";
+            this.context.fillRect(0, 0, scene.canvas.width, scene.canvas.height);
+            this.context.drawImage(scene.canvas, this.position.x / this.scale.x, this.position.y / this.scale.y, this.canvas.width / this.scale.x, this.canvas.height / this.scale.y, 0, 0, this.canvas.width, this.canvas.height);
         };
         return YaceCamera;
     }(YaceObject_1.default));
@@ -148,7 +151,7 @@ define("core/YaceScene", ["require", "exports", "core/YaceContainer"], function 
             this.canvas.width = width;
             this.canvas.height = height;
             this.context = this.canvas.getContext("2d");
-            setInterval(this.onUpdate.bind(this), 1000);
+            setInterval(this.onUpdate.bind(this), 30);
         }
         YaceScene.prototype.onUpdate = function () {
             _super.prototype.onUpdate.call(this);

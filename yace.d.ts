@@ -34,7 +34,6 @@ declare module "core/YaceObject" {
     export default class YaceObject extends YaceContainer implements Drawable {
         behaviors: YaceBehavior[];
         position: Point2D;
-        rotation: Point2D;
         scale: Point2D;
         addBehavior(behavior: YaceBehavior): void;
         removeBehavior(behavior: YaceBehavior): void;
@@ -67,9 +66,9 @@ declare module "core/YaceScene" {
     import YaceContainer from "core/YaceContainer";
     import YaceCamera from "core/YaceCamera";
     export default class YaceScene extends YaceContainer {
-        private canvas;
-        private context;
-        private cameras;
+        canvas: HTMLCanvasElement;
+        context: CanvasRenderingContext2D;
+        cameras: YaceCamera[];
         constructor(width: number, height: number);
         onUpdate(): void;
         addCamera(camera: YaceCamera): void;

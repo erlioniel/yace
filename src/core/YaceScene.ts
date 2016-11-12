@@ -4,10 +4,10 @@ import YaceCamera from "./YaceCamera";
 
 export default class YaceScene extends YaceContainer {
 
-    private canvas: HTMLCanvasElement;
-    private context: CanvasRenderingContext2D;
+    public canvas: HTMLCanvasElement;
+    public context: CanvasRenderingContext2D;
 
-    private cameras: YaceCamera[] = [];
+    public cameras: YaceCamera[] = [];
 
     constructor(width: number, height: number) {
         super();
@@ -17,12 +17,14 @@ export default class YaceScene extends YaceContainer {
         this.canvas.height = height;
         this.context = this.canvas.getContext("2d");
 
-        setInterval(this.onUpdate.bind(this), 1000);
+        setInterval(this.onUpdate.bind(this), 30);
     }
 
     public onUpdate() {
         super.onUpdate();
 
+        // ToDo Separate update and draw logic
+        // ToDo Add deltaTime
         for (let camera of this.cameras) {
             camera.draw(this, this.context);
         }

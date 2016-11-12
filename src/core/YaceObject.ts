@@ -9,7 +9,6 @@ export default class YaceObject extends YaceContainer implements Drawable {
     public behaviors: YaceBehavior[] = [];
 
     public position: Point2D = new Point2D(0, 0);
-    public rotation: Point2D = new Point2D(0, 0);
     public scale: Point2D = new Point2D(1, 1);
 
     public addBehavior(behavior: YaceBehavior): void {
