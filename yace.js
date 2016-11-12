@@ -133,7 +133,7 @@ define("core/YaceCamera", ["require", "exports", "core/YaceObject"], function (r
             }
             this.context.fillStyle = "#000000";
             this.context.fillRect(0, 0, scene.canvas.width, scene.canvas.height);
-            this.context.drawImage(scene.canvas, this.position.x / this.scale.x, this.position.y / this.scale.y, this.canvas.width / this.scale.x, this.canvas.height / this.scale.y, 0, 0, this.canvas.width, this.canvas.height);
+            this.context.drawImage(scene.canvas, (this.position.x - (this.canvas.width / 2 / this.scale.x)), (this.position.y - (this.canvas.height / 2 / this.scale.y)), this.canvas.width / this.scale.x, this.canvas.height / this.scale.y, 0, 0, this.canvas.width, this.canvas.height);
         };
         return YaceCamera;
     }(YaceObject_1.default));

@@ -30,8 +30,8 @@ export default class YaceCamera extends YaceObject {
             scene.canvas,
 
             // Crop
-            this.position.x / this.scale.x,
-            this.position.y / this.scale.y,
+            (this.position.x - (this.canvas.width / 2 / this.scale.x)),
+            (this.position.y - (this.canvas.height / 2 / this.scale.y)),
 
             this.canvas.width / this.scale.x,
             this.canvas.height / this.scale.y,

@@ -46,6 +46,30 @@ export default class SimpleScene {
                     let newY = camera_point.y - (event.pageY - mouse_point.y) / camera.scale.y;
                     camera.position = new Point2D(newX, newY);
                 }
+            })
+            .bind("wheel", function (event) {
+                // Save current focus
+                let c = canvas.get(0) as HTMLCanvasElement;
+                let offset = new Point2D(
+                    event.originalEvent["offsetX"] - c.width / 2,
+                    event.originalEvent["offsetY"] - c.height / 2
+                );
+                let point = new Point2D(
+                    camera.position.x + offset.x / camera.scale.x,
+                    camera.position.y + offset.y / camera.scale.y
+                );
+
+                // Scale
+                let operand = event.originalEvent["deltaY"] < 0
+                    ? new Point2D(0.9, 0.9)
+                    : new Point2D(1.1, 1.1);
+                camera.scale = Point2D.multiply(camera.scale, operand);
+
+                // Offset camera
+                camera.position = new Point2D(
+                    point.x - offset.x / camera.scale.x,
+                    point.y - offset.y / camera.scale.y
+                );
             });
     }
 }

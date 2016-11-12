@@ -29,6 +29,16 @@ define(["require", "exports", "core/YaceScene", "core/YaceObject", "renders/Imag
                     var newY = camera_point.y - (event.pageY - mouse_point.y) / camera.scale.y;
                     camera.position = new Point2D_1.default(newX, newY);
                 }
+            })
+                .bind("wheel", function (event) {
+                var c = canvas.get(0);
+                var offset = new Point2D_1.default(event.originalEvent["offsetX"] - c.width / 2, event.originalEvent["offsetY"] - c.height / 2);
+                var point = new Point2D_1.default(camera.position.x + offset.x / camera.scale.x, camera.position.y + offset.y / camera.scale.y);
+                var operand = event.originalEvent["deltaY"] < 0
+                    ? new Point2D_1.default(0.9, 0.9)
+                    : new Point2D_1.default(1.1, 1.1);
+                camera.scale = Point2D_1.default.multiply(camera.scale, operand);
+                camera.position = new Point2D_1.default(point.x - offset.x / camera.scale.x, point.y - offset.y / camera.scale.y);
             });
         };
         return SimpleScene;
