@@ -22,12 +22,20 @@ export default class YaceScene extends YaceContainer {
 
     public onUpdate() {
         super.onUpdate();
+        let drawn = false;
+
+        for (let child of this.childs) {
+            if(child.isDirty()) {
+                drawn = child.draw(this, this.context) || drawn;
+            }
+        }
 
         // ToDo Separate update and draw logic
         // ToDo Add deltaTime
         for (let camera of this.cameras) {
             camera.onUpdate();
-            if(camera.isDirty()) {
+
+            if(camera.isDirty() || drawn) {
                 camera.draw(this, this.context);
             }
         }

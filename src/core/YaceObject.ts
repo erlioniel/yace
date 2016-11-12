@@ -35,12 +35,13 @@ export default class YaceObject extends YaceContainer implements Drawable {
         }
     }
 
-    public draw(scene: YaceScene, context: CanvasRenderingContext2D): void {
+    public draw(scene: YaceScene, context: CanvasRenderingContext2D): boolean {
         this.dirty = false;
+        let drawn = false;
 
         for (let child of this.childs) {
             if(child.isDirty()) {
-                child.draw(scene, context);
+                drawn = child.draw(scene, context) || drawn;
             }
         }
 
@@ -51,9 +52,11 @@ export default class YaceObject extends YaceContainer implements Drawable {
             }
 
             if(drawable.isDirty()) {
-                drawable.draw(scene, context);
+                drawn = drawable.draw(scene, context) || drawn;
             }
         }
+
+        return drawn;
     }
 
     public isDirty(): boolean {

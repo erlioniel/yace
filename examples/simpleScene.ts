@@ -32,10 +32,12 @@ export default class SimpleScene {
         bounds.boxFixRatio = true;
         camera.addBehavior(bounds);
 
-        // Add simple sprite
-        let sprite = new YaceObject();
-        sprite.addBehavior(new ImageRenderer('images/train.jpg'));
-        sprite.position = new Point2D(170, 120);
-        scene.add(sprite);
+        setTimeout(function() {
+            // Add simple sprite
+            let sprite = new YaceObject();
+            sprite.addBehavior(new ImageRenderer('images/train.jpg'));
+            sprite.position = new Point2D(170, 120);
+            scene.add(sprite);
+        }, 1000);
     }
 }

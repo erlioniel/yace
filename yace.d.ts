@@ -65,7 +65,7 @@ declare module "core/YaceCamera" {
         private mousePoint;
         private cameraPoint;
         constructor(canvas: JQuery);
-        draw(scene: YaceScene, context: CanvasRenderingContext2D): void;
+        draw(scene: YaceScene, context: CanvasRenderingContext2D): boolean;
         box(): Box2D;
         private dragStart(event);
         private dragEnd();
@@ -89,7 +89,7 @@ declare module "core/YaceScene" {
 declare module "core/interfaces/Drawable" {
     import YaceScene from "core/YaceScene";
     interface Drawable {
-        draw(scene: YaceScene, context: CanvasRenderingContext2D): void;
+        draw(scene: YaceScene, context: CanvasRenderingContext2D): boolean;
         isDirty(): boolean;
     }
     export default Drawable;
@@ -108,7 +108,7 @@ declare module "core/YaceObject" {
         addBehavior(behavior: YaceBehavior): YaceObject;
         removeBehavior(behavior: YaceBehavior): YaceObject;
         onUpdate(): void;
-        draw(scene: YaceScene, context: CanvasRenderingContext2D): void;
+        draw(scene: YaceScene, context: CanvasRenderingContext2D): boolean;
         isDirty(): boolean;
     }
 }
@@ -140,7 +140,7 @@ declare module "renders/ImageRenderer" {
         image: HTMLImageElement;
         dirty: boolean;
         constructor(url: string);
-        draw(scene: YaceScene, context: CanvasRenderingContext2D): void;
+        draw(scene: YaceScene, context: CanvasRenderingContext2D): boolean;
         isDirty(): boolean;
     }
 }

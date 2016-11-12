@@ -30,17 +30,14 @@ export default class YaceCamera extends YaceObject implements Boxed {
             .bind("wheel", this.zoomEvent.bind(this));
     }
 
-    public draw(scene: YaceScene, context: CanvasRenderingContext2D): void {
+    public draw(scene: YaceScene, context: CanvasRenderingContext2D): boolean {
         this.dirty = false;
-
-        for (let child of scene.childs) {
-            child.draw(scene, context);
-        }
 
         this.context.fillStyle = "#000000";
         this.context.fillRect(0, 0, scene.canvas.width, scene.canvas.height);
 
         let box = this.box();
+        console.log("CAMERA DRAW CALL");
         this.context.drawImage(
             scene.canvas,
 
@@ -57,6 +54,8 @@ export default class YaceCamera extends YaceObject implements Boxed {
             this.canvas.width,
             this.canvas.height
         );
+
+        return true;
     }
 
     public box(): Box2D {

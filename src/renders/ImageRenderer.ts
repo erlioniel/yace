@@ -15,8 +15,9 @@ export default class ImageRenderer extends YaceBehavior implements Drawable {
         }.bind(this);
     }
 
-    draw(scene: YaceScene, context: CanvasRenderingContext2D): void {
+    draw(scene: YaceScene, context: CanvasRenderingContext2D): boolean {
         this.dirty = false;
+        console.log("IMAGE DRAW CALL");
         context.drawImage(
             this.image,
 
@@ -34,6 +35,8 @@ export default class ImageRenderer extends YaceBehavior implements Drawable {
             this.image.width * this.object.scale.x,
             this.image.height * this.object.scale.y
         );
+
+        return true;
     }
 
     public isDirty(): boolean {

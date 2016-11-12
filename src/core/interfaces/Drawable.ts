@@ -1,7 +1,7 @@
 import YaceScene from "../YaceScene";
 
 interface Drawable {
-    draw(scene: YaceScene, context: CanvasRenderingContext2D): void;
+    draw(scene: YaceScene, context: CanvasRenderingContext2D): boolean;
     isDirty(): boolean;
 }
 
