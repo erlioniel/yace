@@ -1,15 +1,15 @@
 /// <reference path="../typings/index.d.ts" />
 /// <reference path="../yace.d.ts" />
 
-import {YaceScene} from "core/YaceScene";
-import {YaceObject} from "core/YaceObject";
-import {ImageRenderer} from "renders/ImageRenderer";
-import {Point2D} from "utils/Point2D";
-import {YaceCamera} from "core/YaceCamera";
+import YaceScene from "core/YaceScene";
+import YaceObject from "core/YaceObject";
+import ImageRenderer from "renders/ImageRenderer";
+import Point2D from "utils/Point2D";
+import YaceCamera from "core/YaceCamera";
 
 declare let $: JQueryStatic;
 
-export class SimpleScene {
+export default class SimpleScene {
     public test(): void {
         // Prepare scene
         let scene = new YaceScene(1000, 1000);

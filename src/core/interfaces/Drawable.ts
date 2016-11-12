@@ -1,5 +1,7 @@
-import {YaceScene} from "../YaceScene";
+import YaceScene from "../YaceScene";
 
-export interface Drawable {
+interface Drawable {
     draw(scene: YaceScene, context: CanvasRenderingContext2D): void;
 }
+
+export default Drawable;

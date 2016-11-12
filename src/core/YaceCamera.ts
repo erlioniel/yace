@@ -1,8 +1,8 @@
 /// <reference path="../../typings/index.d.ts" />
-import {YaceObject} from "./YaceObject";
-import {YaceScene} from "./YaceScene";
+import YaceObject from "./YaceObject";
+import YaceScene from "./YaceScene";
 
-export class YaceCamera extends YaceObject {
+export default class YaceCamera extends YaceObject {
 
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;

@@ -4,18 +4,19 @@ define(["require", "exports", "core/YaceScene", "core/YaceObject", "renders/Imag
         function SimpleScene() {
         }
         SimpleScene.prototype.test = function () {
-            var scene = new YaceScene_1.YaceScene(1000, 1000);
+            var scene = new YaceScene_1.default(1000, 1000);
             var canvas = $('#canvas');
-            var camera = new YaceCamera_1.YaceCamera(canvas.get(0));
+            var camera = new YaceCamera_1.default(canvas.get(0));
             scene.addCamera(camera);
-            var sprite = new YaceObject_1.YaceObject();
-            sprite.addBehavior(new ImageRenderer_1.ImageRenderer('images/train.jpg'));
-            sprite.scale = new Point2D_1.Point2D(0.5, 0.5);
+            var sprite = new YaceObject_1.default();
+            sprite.addBehavior(new ImageRenderer_1.default('images/train.jpg'));
+            sprite.scale = new Point2D_1.default(0.5, 0.5);
             scene.add(sprite);
             scene.onUpdate();
         };
         return SimpleScene;
     }());
-    exports.SimpleScene = SimpleScene;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = SimpleScene;
 });
 //# sourceMappingURL=simpleScene.js.map

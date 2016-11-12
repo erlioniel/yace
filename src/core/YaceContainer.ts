@@ -1,7 +1,7 @@
-import {YaceObject} from "./YaceObject";
-import {LifeCycle} from "./interfaces/LifeCycle";
+import YaceObject from "./YaceObject";
+import LifeCycle from "./interfaces/LifeCycle";
 
-export abstract class YaceContainer implements LifeCycle {
+abstract class YaceContainer implements LifeCycle {
     public childs: YaceObject[] = [];
 
     public add(obj: YaceObject): void {
@@ -21,3 +21,5 @@ export abstract class YaceContainer implements LifeCycle {
         }
     }
 }
+
+export default YaceContainer;

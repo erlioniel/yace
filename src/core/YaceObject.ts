@@ -1,10 +1,10 @@
-import {YaceContainer} from "./YaceContainer";
-import {YaceBehavior} from "./YaceBehavior";
-import {Drawable} from "./interfaces/Drawable";
-import {Point2D} from "../utils/Point2D";
-import {YaceScene} from "./YaceScene";
+import YaceContainer from "./YaceContainer";
+import YaceBehavior from "./YaceBehavior";
+import Drawable from "./interfaces/Drawable";
+import Point2D from "../utils/Point2D";
+import YaceScene from "./YaceScene";
 
-export class YaceObject extends YaceContainer implements Drawable {
+export default class YaceObject extends YaceContainer implements Drawable {
 
     public behaviors: YaceBehavior[] = [];
 

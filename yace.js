@@ -15,7 +15,8 @@ define("core/YaceBehavior", ["require", "exports"], function (require, exports) 
         };
         return YaceBehavior;
     }());
-    exports.YaceBehavior = YaceBehavior;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = YaceBehavior;
 });
 define("utils/Point2D", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -38,7 +39,8 @@ define("utils/Point2D", ["require", "exports"], function (require, exports) {
         };
         return Point2D;
     }());
-    exports.Point2D = Point2D;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = Point2D;
 });
 define("core/YaceObject", ["require", "exports", "core/YaceContainer", "utils/Point2D"], function (require, exports, YaceContainer_1, Point2D_1) {
     "use strict";
@@ -47,9 +49,9 @@ define("core/YaceObject", ["require", "exports", "core/YaceContainer", "utils/Po
         function YaceObject() {
             _super.apply(this, arguments);
             this.behaviors = [];
-            this.position = new Point2D_1.Point2D(0, 0);
-            this.rotation = new Point2D_1.Point2D(0, 0);
-            this.scale = new Point2D_1.Point2D(1, 1);
+            this.position = new Point2D_1.default(0, 0);
+            this.rotation = new Point2D_1.default(0, 0);
+            this.scale = new Point2D_1.default(1, 1);
         }
         YaceObject.prototype.addBehavior = function (behavior) {
             this.behaviors.push(behavior);
@@ -84,8 +86,9 @@ define("core/YaceObject", ["require", "exports", "core/YaceContainer", "utils/Po
             }
         };
         return YaceObject;
-    }(YaceContainer_1.YaceContainer));
-    exports.YaceObject = YaceObject;
+    }(YaceContainer_1.default));
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = YaceObject;
 });
 define("core/YaceContainer", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -110,7 +113,8 @@ define("core/YaceContainer", ["require", "exports"], function (require, exports)
         };
         return YaceContainer;
     }());
-    exports.YaceContainer = YaceContainer;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = YaceContainer;
 });
 define("core/YaceCamera", ["require", "exports", "core/YaceObject"], function (require, exports, YaceObject_1) {
     "use strict";
@@ -129,8 +133,9 @@ define("core/YaceCamera", ["require", "exports", "core/YaceObject"], function (r
             }
         };
         return YaceCamera;
-    }(YaceObject_1.YaceObject));
-    exports.YaceCamera = YaceCamera;
+    }(YaceObject_1.default));
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = YaceCamera;
 });
 define("core/YaceScene", ["require", "exports", "core/YaceContainer"], function (require, exports, YaceContainer_2) {
     "use strict";
@@ -162,8 +167,9 @@ define("core/YaceScene", ["require", "exports", "core/YaceContainer"], function 
             }
         };
         return YaceScene;
-    }(YaceContainer_2.YaceContainer));
-    exports.YaceScene = YaceScene;
+    }(YaceContainer_2.default));
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = YaceScene;
 });
 define("core/interfaces/Drawable", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -174,20 +180,18 @@ define("renders/ImageRenderer", ["require", "exports", "core/YaceBehavior"], fun
         __extends(ImageRenderer, _super);
         function ImageRenderer(url) {
             _super.call(this);
-            var that = this;
             this.image = new Image();
             this.image.src = url;
             this.image.onload = function () {
-                that.width = that.width || this.width;
-                that.height = that.height || this.height;
             };
         }
         ImageRenderer.prototype.draw = function (scene, context) {
-            context.drawImage(this.image, 0, 0, this.width, this.height, this.object.position.x * this.object.scale.x, this.object.position.y * this.object.scale.y, this.width * this.object.scale.x, this.height * this.object.scale.y);
+            context.drawImage(this.image, 0, 0, this.image.width, this.image.height, this.object.position.x * this.object.scale.x, this.object.position.y * this.object.scale.y, this.image.width * this.object.scale.x, this.image.height * this.object.scale.y);
         };
         return ImageRenderer;
-    }(YaceBehavior_1.YaceBehavior));
-    exports.ImageRenderer = ImageRenderer;
+    }(YaceBehavior_1.default));
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = ImageRenderer;
 });
 define("utils/Box2D", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -198,6 +202,7 @@ define("utils/Box2D", ["require", "exports"], function (require, exports) {
         }
         return Box2D;
     }());
-    exports.Box2D = Box2D;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = Box2D;
 });
 //# sourceMappingURL=yace.js.map
