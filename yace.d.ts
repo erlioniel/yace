@@ -29,6 +29,7 @@ declare module "utils/Point2D" {
         static divide(v1: Point2D, v2: Point2D): Point2D;
         static max(v1: Point2D, v2: Point2D): Point2D;
         static min(v1: Point2D, v2: Point2D): Point2D;
+        static invert(v1: Point2D): Point2D;
         static equals(v1: Point2D, v2: Point2D): boolean;
     }
 }
@@ -124,6 +125,7 @@ declare module "behaviors/BoundsBehavior" {
         positionBound: Box2D;
         scaleBound: Box2D;
         boxBound: Box2D;
+        boxFixRatio: boolean;
         onUpdate(): void;
     }
 }

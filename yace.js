@@ -59,6 +59,9 @@ define("utils/Point2D", ["require", "exports"], function (require, exports) {
         Point2D.min = function (v1, v2) {
             return new Point2D(Math.min(v1.x, v2.x), Math.min(v1.y, v2.y));
         };
+        Point2D.invert = function (v1) {
+            return new Point2D(v1.y, v1.x);
+        };
         Point2D.equals = function (v1, v2) {
             return v1.x === v2.x && v1.y === v2.y;
         };
@@ -277,7 +280,8 @@ define("behaviors/BoundsBehavior", ["require", "exports", "core/YaceBehavior", "
                 var boxed = this.object;
                 if (typeof (boxed.box) !== "undefined") {
                     var box = boxed.box();
-                    this.object.scale = Point2D_4.default.multiply(this.object.scale, new Point2D_4.default(Math.max(1, box.width() / this.boxBound.width()), Math.max(1, box.height() / this.boxBound.height())));
+                    var scale = Point2D_4.default.multiply(this.object.scale, new Point2D_4.default(Math.max(1, box.width() / this.boxBound.width()), Math.max(1, box.height() / this.boxBound.height())));
+                    this.object.scale = Point2D_4.default.max(scale, Point2D_4.default.invert(scale));
                     box = boxed.box();
                     this.object.position = Point2D_4.default.subtract(this.object.position, Point2D_4.default.min(Point2D_4.default.ZERO, Point2D_4.default.subtract(box.min, this.boxBound.min)));
                     this.object.position = Point2D_4.default.concat(this.object.position, Point2D_4.default.min(Point2D_4.default.ZERO, Point2D_4.default.subtract(this.boxBound.max, box.max)));

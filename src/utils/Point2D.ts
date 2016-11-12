@@ -35,6 +35,11 @@ export default class Point2D {
         return new Point2D(Math.min(v1.x, v2.x), Math.min(v1.y, v2.y));
     }
 
+    static invert(v1: Point2D): Point2D {
+        //noinspection JSSuspiciousNameCombination
+        return new Point2D(v1.y, v1.x);
+    }
+
     static equals(v1: Point2D, v2: Point2D): boolean {
         return v1.x === v2.x && v1.y === v2.y;
     }

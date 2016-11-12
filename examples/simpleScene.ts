@@ -29,6 +29,7 @@ export default class SimpleScene {
         let bounds = new BoundsBehavior();
         bounds.scaleBound = new Box2D(new Point2D(0.1, 0.1), new Point2D(1.5, 1.5));
         bounds.boxBound = new Box2D(new Point2D(-100, -100), new Point2D(1700, 1180));
+        bounds.boxFixRatio = true;
         camera.addBehavior(bounds);
 
         // Add simple sprite

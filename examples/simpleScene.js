@@ -13,6 +13,7 @@ define(["require", "exports", "core/YaceScene", "core/YaceObject", "core/YaceCam
             var bounds = new BoundsBehavior_1.default();
             bounds.scaleBound = new Box2D_1.default(new Point2D_1.default(0.1, 0.1), new Point2D_1.default(1.5, 1.5));
             bounds.boxBound = new Box2D_1.default(new Point2D_1.default(-100, -100), new Point2D_1.default(1700, 1180));
+            bounds.boxFixRatio = true;
             camera.addBehavior(bounds);
             var sprite = new YaceObject_1.default();
             sprite.addBehavior(new ImageRenderer_1.default('images/train.jpg'));

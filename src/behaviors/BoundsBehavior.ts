@@ -6,6 +6,7 @@ export default class BoundsBehavior extends YaceBehavior {
     public positionBound: Box2D;
     public scaleBound: Box2D;
     public boxBound: Box2D;
+    public boxFixRatio: boolean;
 
     onUpdate(): void {
         super.onUpdate();
@@ -24,13 +25,14 @@ export default class BoundsBehavior extends YaceBehavior {
 
                 // Calculate max scale for boxBound
                 let box = boxed.box();
-                this.object.scale = Point2D.multiply(
+                let scale = Point2D.multiply(
                     this.object.scale,
                     new Point2D(
                         Math.max(1, box.width() / this.boxBound.width()),
                         Math.max(1, box.height() / this.boxBound.height())
                     )
                 );
+                this.object.scale = Point2D.max(scale, Point2D.invert(scale));
 
                 // Bound object box
                 box = boxed.box();
