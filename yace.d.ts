@@ -144,3 +144,19 @@ declare module "renders/ImageRenderer" {
         isDirty(): boolean;
     }
 }
+declare module "renders/PolyRenderer" {
+    import YaceBehavior from "core/YaceBehavior";
+    import Drawable from "core/interfaces/Drawable";
+    import YaceScene from "core/YaceScene";
+    import Point2D from "utils/Point2D";
+    export default class PolyRenderer extends YaceBehavior implements Drawable {
+        dirty: boolean;
+        points: Point2D[];
+        fillColor: string | CanvasGradient | CanvasPattern;
+        strokeColor: string | CanvasGradient | CanvasPattern;
+        strokeSize: number;
+        constructor(points: Point2D[]);
+        draw(scene: YaceScene, context: CanvasRenderingContext2D): boolean;
+        isDirty(): boolean;
+    }
+}

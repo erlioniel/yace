@@ -1,4 +1,4 @@
-define(["require", "exports", "core/YaceScene", "core/YaceObject", "core/YaceCamera", "renders/ImageRenderer", "behaviors/BoundsBehavior", "utils/Point2D", "utils/Box2D"], function (require, exports, YaceScene_1, YaceObject_1, YaceCamera_1, ImageRenderer_1, BoundsBehavior_1, Point2D_1, Box2D_1) {
+define(["require", "exports", "core/YaceScene", "core/YaceObject", "core/YaceCamera", "renders/ImageRenderer", "renders/PolyRenderer", "behaviors/BoundsBehavior", "utils/Point2D", "utils/Box2D"], function (require, exports, YaceScene_1, YaceObject_1, YaceCamera_1, ImageRenderer_1, PolyRenderer_1, BoundsBehavior_1, Point2D_1, Box2D_1) {
     "use strict";
     var SimpleScene = (function () {
         function SimpleScene(selector) {
@@ -15,6 +15,17 @@ define(["require", "exports", "core/YaceScene", "core/YaceObject", "core/YaceCam
             bounds.boxBound = new Box2D_1.default(new Point2D_1.default(-100, -100), new Point2D_1.default(1700, 1180));
             bounds.boxFixRatio = true;
             camera.addBehavior(bounds);
+            var poly = new YaceObject_1.default();
+            var polyRenderer = new PolyRenderer_1.default([
+                new Point2D_1.default(0, 0),
+                new Point2D_1.default(1600, 0),
+                new Point2D_1.default(1600, 1080),
+                new Point2D_1.default(0, 1080)
+            ]);
+            polyRenderer.fillColor = "#666666";
+            poly.addBehavior(polyRenderer);
+            poly.position = new Point2D_1.default(0, 0);
+            scene.add(poly);
             setTimeout(function () {
                 var sprite = new YaceObject_1.default();
                 sprite.addBehavior(new ImageRenderer_1.default('images/train.jpg'));

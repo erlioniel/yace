@@ -353,4 +353,52 @@ define("renders/ImageRenderer", ["require", "exports", "core/YaceBehavior"], fun
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ImageRenderer;
 });
+define("renders/PolyRenderer", ["require", "exports", "core/YaceBehavior", "utils/Point2D"], function (require, exports, YaceBehavior_3, Point2D_5) {
+    "use strict";
+    var PolyRenderer = (function (_super) {
+        __extends(PolyRenderer, _super);
+        function PolyRenderer(points) {
+            _super.call(this);
+            this.dirty = true;
+            this.points = [];
+            this.strokeSize = 1;
+            this.points = points;
+        }
+        PolyRenderer.prototype.draw = function (scene, context) {
+            this.dirty = false;
+            console.log("POLY DRAW CALL");
+            context.beginPath();
+            var offset = new Point2D_5.default(this.object.position.x * this.object.scale.x, this.object.position.y * this.object.scale.y);
+            var first = true;
+            for (var _i = 0, _a = this.points; _i < _a.length; _i++) {
+                var point = _a[_i];
+                var targetPoint = new Point2D_5.default(offset.x + point.x * this.object.scale.x, offset.y + point.y * this.object.scale.y);
+                if (first) {
+                    first = false;
+                    context.moveTo(targetPoint.x, targetPoint.y);
+                }
+                else {
+                    context.lineTo(targetPoint.x, targetPoint.y);
+                }
+            }
+            context.closePath();
+            if (this.strokeColor != null) {
+                context.lineWidth = this.strokeSize;
+                context.strokeStyle = this.strokeColor;
+                context.stroke();
+            }
+            if (this.fillColor != null) {
+                context.fillStyle = this.fillColor;
+                context.fill();
+            }
+            return true;
+        };
+        PolyRenderer.prototype.isDirty = function () {
+            return this.dirty;
+        };
+        return PolyRenderer;
+    }(YaceBehavior_3.default));
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = PolyRenderer;
+});
 //# sourceMappingURL=yace.js.map

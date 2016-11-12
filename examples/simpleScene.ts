@@ -5,6 +5,7 @@ import YaceScene from "core/YaceScene";
 import YaceObject from "core/YaceObject";
 import YaceCamera from "core/YaceCamera";
 import ImageRenderer from "renders/ImageRenderer";
+import PolyRenderer from "renders/PolyRenderer";
 import BoundsBehavior from "behaviors/BoundsBehavior";
 import Point2D from "utils/Point2D";
 import Box2D from "utils/Box2D";
@@ -31,6 +32,18 @@ export default class SimpleScene {
         bounds.boxBound = new Box2D(new Point2D(-100, -100), new Point2D(1700, 1180));
         bounds.boxFixRatio = true;
         camera.addBehavior(bounds);
+
+        let poly = new YaceObject();
+        let polyRenderer = new PolyRenderer([
+            new Point2D(0,0),
+            new Point2D(1600,0),
+            new Point2D(1600,1080),
+            new Point2D(0,1080)
+        ]);
+        polyRenderer.fillColor = "#666666";
+        poly.addBehavior(polyRenderer);
+        poly.position = new Point2D(0, 0);
+        scene.add(poly);
 
         setTimeout(function() {
             // Add simple sprite
