@@ -5,14 +5,16 @@ declare module "core/interfaces/LifeCycle" {
     }
     export default LifeCycle;
 }
-declare module "core/YaceBehavior" {
+declare module "core/YaceContainer" {
     import YaceObject from "core/YaceObject";
     import LifeCycle from "core/interfaces/LifeCycle";
-    abstract class YaceBehavior implements LifeCycle {
-        object: YaceObject;
+    abstract class YaceContainer implements LifeCycle {
+        childs: YaceObject[];
+        add(obj: YaceObject): YaceContainer;
+        remove(obj: YaceObject): YaceContainer;
         onUpdate(): void;
     }
-    export default YaceBehavior;
+    export default YaceContainer;
 }
 declare module "utils/Point2D" {
     export default class Point2D {
@@ -22,44 +24,39 @@ declare module "utils/Point2D" {
         y: number;
         constructor(x: number, y: number);
         static concat(v1: Point2D, v2: Point2D): Point2D;
-        static substract(v1: Point2D, v2: Point2D): Point2D;
+        static subtract(v1: Point2D, v2: Point2D): Point2D;
         static multiply(v1: Point2D, v2: Point2D): Point2D;
         static divide(v1: Point2D, v2: Point2D): Point2D;
+        static max(v1: Point2D, v2: Point2D): Point2D;
+        static min(v1: Point2D, v2: Point2D): Point2D;
         static equals(v1: Point2D, v2: Point2D): boolean;
     }
 }
-declare module "core/YaceObject" {
-    import YaceContainer from "core/YaceContainer";
-    import YaceBehavior from "core/YaceBehavior";
-    import Drawable from "core/interfaces/Drawable";
+declare module "utils/Box2D" {
     import Point2D from "utils/Point2D";
-    import YaceScene from "core/YaceScene";
-    export default class YaceObject extends YaceContainer implements Drawable {
-        behaviors: YaceBehavior[];
-        position: Point2D;
-        scale: Point2D;
-        addBehavior(behavior: YaceBehavior): void;
-        removeBehavior(behavior: YaceBehavior): void;
-        onUpdate(): void;
-        draw(scene: YaceScene, context: CanvasRenderingContext2D): void;
+    export default class Box2D {
+        min: Point2D;
+        max: Point2D;
+        constructor(min: Point2D, max: Point2D);
+        width(): number;
+        height(): number;
+        static bound(bounds: Box2D, point: Point2D): Point2D;
     }
 }
-declare module "core/YaceContainer" {
-    import YaceObject from "core/YaceObject";
-    import LifeCycle from "core/interfaces/LifeCycle";
-    abstract class YaceContainer implements LifeCycle {
-        childs: YaceObject[];
-        add(obj: YaceObject): void;
-        remove(obj: YaceObject): void;
-        onUpdate(): void;
+declare module "core/interfaces/Boxed" {
+    import Box2D from "utils/Box2D";
+    interface Boxed {
+        box(): Box2D;
     }
-    export default YaceContainer;
+    export default Boxed;
 }
 declare module "core/YaceCamera" {
     import YaceObject from "core/YaceObject";
     import YaceScene from "core/YaceScene";
     import Point2D from "utils/Point2D";
-    export default class YaceCamera extends YaceObject {
+    import Boxed from "core/interfaces/Boxed";
+    import Box2D from "utils/Box2D";
+    export default class YaceCamera extends YaceObject implements Boxed {
         private canvas;
         private context;
         dragSpeed: Point2D;
@@ -68,6 +65,7 @@ declare module "core/YaceCamera" {
         private cameraPoint;
         constructor(canvas: JQuery);
         draw(scene: YaceScene, context: CanvasRenderingContext2D): void;
+        box(): Box2D;
         private dragStart(event);
         private dragEnd();
         private dragEvent(event);
@@ -94,6 +92,41 @@ declare module "core/interfaces/Drawable" {
     }
     export default Drawable;
 }
+declare module "core/YaceObject" {
+    import YaceContainer from "core/YaceContainer";
+    import YaceBehavior from "core/YaceBehavior";
+    import Drawable from "core/interfaces/Drawable";
+    import Point2D from "utils/Point2D";
+    import YaceScene from "core/YaceScene";
+    export default class YaceObject extends YaceContainer implements Drawable {
+        behaviors: YaceBehavior[];
+        position: Point2D;
+        scale: Point2D;
+        addBehavior(behavior: YaceBehavior): YaceObject;
+        removeBehavior(behavior: YaceBehavior): YaceObject;
+        onUpdate(): void;
+        draw(scene: YaceScene, context: CanvasRenderingContext2D): void;
+    }
+}
+declare module "core/YaceBehavior" {
+    import YaceObject from "core/YaceObject";
+    import LifeCycle from "core/interfaces/LifeCycle";
+    abstract class YaceBehavior implements LifeCycle {
+        object: YaceObject;
+        onUpdate(): void;
+    }
+    export default YaceBehavior;
+}
+declare module "behaviors/BoundsBehavior" {
+    import YaceBehavior from "core/YaceBehavior";
+    import Box2D from "utils/Box2D";
+    export default class BoundsBehavior extends YaceBehavior {
+        positionBound: Box2D;
+        scaleBound: Box2D;
+        boxBound: Box2D;
+        onUpdate(): void;
+    }
+}
 declare module "renders/ImageRenderer" {
     import YaceBehavior from "core/YaceBehavior";
     import Drawable from "core/interfaces/Drawable";
@@ -102,13 +135,5 @@ declare module "renders/ImageRenderer" {
         private image;
         constructor(url: string);
         draw(scene: YaceScene, context: CanvasRenderingContext2D): void;
-    }
-}
-declare module "utils/Box2D" {
-    import Point2D from "utils/Point2D";
-    export default class Box2D {
-        lt: Point2D;
-        rb: Point2D;
-        constructor(lt: Point2D, rb: Point2D);
     }
 }

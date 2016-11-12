@@ -15,7 +15,7 @@ export default class Point2D {
         return new Point2D(v1.x + v2.x, v1.y + v2.y);
     }
 
-    static substract(v1: Point2D, v2: Point2D): Point2D {
+    static subtract(v1: Point2D, v2: Point2D): Point2D {
         return new Point2D(v1.x - v2.x, v1.y - v2.y);
     }
 
@@ -25,6 +25,14 @@ export default class Point2D {
 
     static divide(v1: Point2D, v2: Point2D): Point2D {
         return new Point2D(v1.x / v2.x, v1.y / v2.y);
+    }
+
+    static max(v1: Point2D, v2: Point2D): Point2D {
+        return new Point2D(Math.max(v1.x, v2.x), Math.max(v1.y, v2.y));
+    }
+
+    static min(v1: Point2D, v2: Point2D): Point2D {
+        return new Point2D(Math.min(v1.x, v2.x), Math.min(v1.y, v2.y));
     }
 
     static equals(v1: Point2D, v2: Point2D): boolean {

@@ -26,6 +26,7 @@ export default class YaceScene extends YaceContainer {
         // ToDo Separate update and draw logic
         // ToDo Add deltaTime
         for (let camera of this.cameras) {
+            camera.onUpdate();
             camera.draw(this, this.context);
         }
     }

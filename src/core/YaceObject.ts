@@ -11,17 +11,19 @@ export default class YaceObject extends YaceContainer implements Drawable {
     public position: Point2D = new Point2D(0, 0);
     public scale: Point2D = new Point2D(1, 1);
 
-    public addBehavior(behavior: YaceBehavior): void {
+    public addBehavior(behavior: YaceBehavior): YaceObject {
         this.behaviors.push(behavior);
         behavior.object = this;
+        return this;
     }
 
-    public removeBehavior(behavior: YaceBehavior): void {
+    public removeBehavior(behavior: YaceBehavior): YaceObject {
         behavior.object = null;
         let start = this.behaviors.indexOf(behavior);
         if (start >= 0) {
             this.behaviors.splice(start, 1);
         }
+        return this;
     }
 
     onUpdate(): void {

@@ -2,8 +2,10 @@
 import YaceObject from "./YaceObject";
 import YaceScene from "./YaceScene";
 import Point2D from "../utils/Point2D";
+import Boxed from "./interfaces/Boxed";
+import Box2D from "../utils/Box2D";
 
-export default class YaceCamera extends YaceObject {
+export default class YaceCamera extends YaceObject implements Boxed {
 
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
@@ -40,24 +42,35 @@ export default class YaceCamera extends YaceObject {
         this.context.fillStyle = "#000000";
         this.context.fillRect(0, 0, scene.canvas.width, scene.canvas.height);
 
+        let box = this.box();
         this.context.drawImage(
             scene.canvas,
 
             // Crop
-            (this.position.x - (this.canvas.width / 2 / this.scale.x)),
-            (this.position.y - (this.canvas.height / 2 / this.scale.y)),
-
-            this.canvas.width / this.scale.x,
-            this.canvas.height / this.scale.y,
+            box.min.x,
+            box.min.y,
+            box.max.x - box.min.x,
+            box.max.y - box.min.y,
 
             // Offset
-            0,
-            0,
+            0, 0,
 
             // Scale
             this.canvas.width,
             this.canvas.height
         );
+    }
+
+    public box(): Box2D {
+        let min = new Point2D(
+            (this.position.x - (this.canvas.width / 2 / this.scale.x)),
+            (this.position.y - (this.canvas.height / 2 / this.scale.y))
+        );
+        let max = new Point2D(
+            min.x + this.canvas.width / this.scale.x,
+            min.y + this.canvas.height / this.scale.y
+        );
+        return new Box2D(min, max);
     }
 
     private dragStart(event) {
@@ -101,7 +114,7 @@ export default class YaceCamera extends YaceObject {
 
         // Scale
         let operand = event.originalEvent["deltaY"] < 0
-            ? Point2D.substract(Point2D.ONE, this.zoomSpeed)
+            ? Point2D.subtract(Point2D.ONE, this.zoomSpeed)
             : Point2D.concat(Point2D.ONE, this.zoomSpeed);
         this.scale = Point2D.multiply(this.scale, operand);
 
