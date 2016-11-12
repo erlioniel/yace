@@ -90,6 +90,7 @@ declare module "core/interfaces/Drawable" {
     import YaceScene from "core/YaceScene";
     interface Drawable {
         draw(scene: YaceScene, context: CanvasRenderingContext2D): void;
+        isDirty(): boolean;
     }
     export default Drawable;
 }
@@ -103,10 +104,12 @@ declare module "core/YaceObject" {
         behaviors: YaceBehavior[];
         position: Point2D;
         scale: Point2D;
+        dirty: boolean;
         addBehavior(behavior: YaceBehavior): YaceObject;
         removeBehavior(behavior: YaceBehavior): YaceObject;
         onUpdate(): void;
         draw(scene: YaceScene, context: CanvasRenderingContext2D): void;
+        isDirty(): boolean;
     }
 }
 declare module "core/YaceBehavior" {
@@ -134,8 +137,10 @@ declare module "renders/ImageRenderer" {
     import Drawable from "core/interfaces/Drawable";
     import YaceScene from "core/YaceScene";
     export default class ImageRenderer extends YaceBehavior implements Drawable {
-        private image;
+        image: HTMLImageElement;
+        dirty: boolean;
         constructor(url: string);
         draw(scene: YaceScene, context: CanvasRenderingContext2D): void;
+        isDirty(): boolean;
     }
 }

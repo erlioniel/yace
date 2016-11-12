@@ -113,8 +113,7 @@ define("core/YaceCamera", ["require", "exports", "core/YaceObject", "utils/Point
                 .bind("wheel", this.zoomEvent.bind(this));
         }
         YaceCamera.prototype.draw = function (scene, context) {
-            context.fillStyle = "#9ea7b8";
-            context.fillRect(0, 0, scene.canvas.width, scene.canvas.height);
+            this.dirty = false;
             for (var _i = 0, _a = scene.childs; _i < _a.length; _i++) {
                 var child = _a[_i];
                 child.draw(scene, context);
@@ -143,12 +142,14 @@ define("core/YaceCamera", ["require", "exports", "core/YaceObject", "utils/Point
             if (this.mousePoint == null) {
                 return;
             }
+            this.dirty = true;
             this.position = new Point2D_2.default(this.cameraPoint.x - (event.pageX - this.mousePoint.x) * this.dragSpeed.x / this.scale.x, this.cameraPoint.y - (event.pageY - this.mousePoint.y) * this.dragSpeed.y / this.scale.y);
         };
         YaceCamera.prototype.zoomEvent = function (event) {
             if (Point2D_2.default.equals(Point2D_2.default.ZERO, this.zoomSpeed)) {
                 return;
             }
+            this.dirty = true;
             var offset = new Point2D_2.default(event.originalEvent["offsetX"] - this.canvas.width / 2, event.originalEvent["offsetY"] - this.canvas.height / 2);
             var point = new Point2D_2.default(this.position.x + offset.x / this.scale.x, this.position.y + offset.y / this.scale.y);
             var operand = event.originalEvent["deltaY"] < 0
@@ -180,7 +181,9 @@ define("core/YaceScene", ["require", "exports", "core/YaceContainer"], function 
             for (var _i = 0, _a = this.cameras; _i < _a.length; _i++) {
                 var camera = _a[_i];
                 camera.onUpdate();
-                camera.draw(this, this.context);
+                if (camera.isDirty()) {
+                    camera.draw(this, this.context);
+                }
             }
         };
         YaceScene.prototype.addCamera = function (camera) {
@@ -209,6 +212,7 @@ define("core/YaceObject", ["require", "exports", "core/YaceContainer", "utils/Po
             this.behaviors = [];
             this.position = new Point2D_3.default(0, 0);
             this.scale = new Point2D_3.default(1, 1);
+            this.dirty = true;
         }
         YaceObject.prototype.addBehavior = function (behavior) {
             this.behaviors.push(behavior);
@@ -231,9 +235,12 @@ define("core/YaceObject", ["require", "exports", "core/YaceContainer", "utils/Po
             }
         };
         YaceObject.prototype.draw = function (scene, context) {
+            this.dirty = false;
             for (var _i = 0, _a = this.childs; _i < _a.length; _i++) {
                 var child = _a[_i];
-                child.draw(scene, context);
+                if (child.isDirty()) {
+                    child.draw(scene, context);
+                }
             }
             for (var _b = 0, _c = this.behaviors; _b < _c.length; _b++) {
                 var behavior = _c[_b];
@@ -241,7 +248,27 @@ define("core/YaceObject", ["require", "exports", "core/YaceContainer", "utils/Po
                 if (typeof (drawable.draw) === "undefined") {
                     continue;
                 }
-                drawable.draw(scene, context);
+                if (drawable.isDirty()) {
+                    drawable.draw(scene, context);
+                }
+            }
+        };
+        YaceObject.prototype.isDirty = function () {
+            if (this.dirty) {
+                return true;
+            }
+            for (var _i = 0, _a = this.childs; _i < _a.length; _i++) {
+                var child = _a[_i];
+                if (child.isDirty()) {
+                    return true;
+                }
+            }
+            for (var _b = 0, _c = this.behaviors; _b < _c.length; _b++) {
+                var behavior = _c[_b];
+                var drawable = behavior;
+                if (typeof (drawable.isDirty) !== "undefined" && drawable.isDirty()) {
+                    return true;
+                }
             }
         };
         return YaceObject;
@@ -302,10 +329,15 @@ define("renders/ImageRenderer", ["require", "exports", "core/YaceBehavior"], fun
             this.image = new Image();
             this.image.src = url;
             this.image.onload = function () {
-            };
+                this.dirty = true;
+            }.bind(this);
         }
         ImageRenderer.prototype.draw = function (scene, context) {
+            this.dirty = false;
             context.drawImage(this.image, 0, 0, this.image.width, this.image.height, this.object.position.x * this.object.scale.x, this.object.position.y * this.object.scale.y, this.image.width * this.object.scale.x, this.image.height * this.object.scale.y);
+        };
+        ImageRenderer.prototype.isDirty = function () {
+            return this.dirty;
         };
         return ImageRenderer;
     }(YaceBehavior_2.default));

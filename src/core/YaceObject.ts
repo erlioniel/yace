@@ -11,6 +11,8 @@ export default class YaceObject extends YaceContainer implements Drawable {
     public position: Point2D = new Point2D(0, 0);
     public scale: Point2D = new Point2D(1, 1);
 
+    public dirty: boolean = true;
+
     public addBehavior(behavior: YaceBehavior): YaceObject {
         this.behaviors.push(behavior);
         behavior.object = this;
@@ -33,9 +35,13 @@ export default class YaceObject extends YaceContainer implements Drawable {
         }
     }
 
-    draw(scene: YaceScene, context: CanvasRenderingContext2D): void {
+    public draw(scene: YaceScene, context: CanvasRenderingContext2D): void {
+        this.dirty = false;
+
         for (let child of this.childs) {
-            child.draw(scene, context);
+            if(child.isDirty()) {
+                child.draw(scene, context);
+            }
         }
 
         for (let behavior of this.behaviors) {
@@ -44,7 +50,28 @@ export default class YaceObject extends YaceContainer implements Drawable {
                 continue;
             }
 
-            drawable.draw(scene, context);
+            if(drawable.isDirty()) {
+                drawable.draw(scene, context);
+            }
+        }
+    }
+
+    public isDirty(): boolean {
+        if(this.dirty) {
+            return true;
+        }
+
+        for (let child of this.childs) {
+            if(child.isDirty()) {
+                return true;
+            }
+        }
+
+        for (let behavior of this.behaviors) {
+            let drawable = behavior as any as Drawable;
+            if(typeof(drawable.isDirty) !== "undefined" && drawable.isDirty()) {
+                return true;
+            }
         }
     }
 }

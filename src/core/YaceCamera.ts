@@ -31,9 +31,7 @@ export default class YaceCamera extends YaceObject implements Boxed {
     }
 
     public draw(scene: YaceScene, context: CanvasRenderingContext2D): void {
-
-        context.fillStyle = "#9ea7b8";
-        context.fillRect(0, 0, scene.canvas.width, scene.canvas.height);
+        this.dirty = false;
 
         for (let child of scene.childs) {
             child.draw(scene, context);
@@ -91,6 +89,8 @@ export default class YaceCamera extends YaceObject implements Boxed {
             return;
         }
 
+        this.dirty = true;
+
         this.position = new Point2D(
             this.cameraPoint.x - (event.pageX - this.mousePoint.x) * this.dragSpeed.x / this.scale.x,
             this.cameraPoint.y - (event.pageY - this.mousePoint.y) * this.dragSpeed.y / this.scale.y
@@ -101,6 +101,8 @@ export default class YaceCamera extends YaceObject implements Boxed {
         if(Point2D.equals(Point2D.ZERO, this.zoomSpeed)) {
             return;
         }
+
+        this.dirty = true;
 
         // Save current focus
         let offset = new Point2D(

@@ -3,18 +3,20 @@ import Drawable from "../core/interfaces/Drawable";
 import YaceScene from "../core/YaceScene";
 
 export default class ImageRenderer extends YaceBehavior implements Drawable {
-    private image: HTMLImageElement;
+    public image: HTMLImageElement;
+    public dirty: boolean;
 
     constructor(url: string) {
         super();
         this.image = new Image();
         this.image.src = url;
         this.image.onload = function () {
-            // ToDo Mark as dirty?
-        };
+            this.dirty = true;
+        }.bind(this);
     }
 
     draw(scene: YaceScene, context: CanvasRenderingContext2D): void {
+        this.dirty = false;
         context.drawImage(
             this.image,
 
@@ -32,5 +34,9 @@ export default class ImageRenderer extends YaceBehavior implements Drawable {
             this.image.width * this.object.scale.x,
             this.image.height * this.object.scale.y
         );
+    }
+
+    public isDirty(): boolean {
+        return this.dirty;
     }
 }
