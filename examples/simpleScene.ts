@@ -10,12 +10,12 @@ import YaceCamera from "core/YaceCamera";
 declare let $: JQueryStatic;
 
 export default class SimpleScene {
-    public test(): void {
+    constructor(selector: string) {
         // Prepare scene
         let scene = new YaceScene(1600, 1080);
 
         // Prepare camera
-        let canvas = $('#canvas');
+        let canvas = $(selector);
         let camera = new YaceCamera(canvas);
         camera.scale = new Point2D(0.5, 0.5);
         camera.dragSpeed = Point2D.ONE;
@@ -27,6 +27,5 @@ export default class SimpleScene {
         sprite.addBehavior(new ImageRenderer('images/train.jpg'));
         sprite.position = new Point2D(170, 120);
         scene.add(sprite);
-
     }
 }
