@@ -37,6 +37,11 @@ define("utils/Point2D", ["require", "exports"], function (require, exports) {
         Point2D.divide = function (v1, v2) {
             return new Point2D(v1.x / v2.x, v1.y / v2.y);
         };
+        Point2D.equals = function (v1, v2) {
+            return v1.x === v2.x && v1.y === v2.y;
+        };
+        Point2D.ONE = new Point2D(1, 1);
+        Point2D.ZERO = new Point2D(0, 0);
         return Point2D;
     }());
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -115,14 +120,21 @@ define("core/YaceContainer", ["require", "exports"], function (require, exports)
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = YaceContainer;
 });
-define("core/YaceCamera", ["require", "exports", "core/YaceObject"], function (require, exports, YaceObject_1) {
+define("core/YaceCamera", ["require", "exports", "core/YaceObject", "utils/Point2D"], function (require, exports, YaceObject_1, Point2D_2) {
     "use strict";
     var YaceCamera = (function (_super) {
         __extends(YaceCamera, _super);
         function YaceCamera(canvas) {
             _super.call(this);
-            this.canvas = canvas;
+            this.dragSpeed = Point2D_2.default.ZERO;
+            this.zoomSpeed = Point2D_2.default.ZERO;
+            this.canvas = canvas.get(0);
             this.context = this.canvas.getContext("2d");
+            canvas
+                .bind("mousedown", this.dragStart.bind(this))
+                .bind("mouseup mouseleave", this.dragEnd.bind(this))
+                .bind("mousemove", this.dragEvent.bind(this))
+                .bind("wheel", this.zoomEvent.bind(this));
         }
         YaceCamera.prototype.draw = function (scene, context) {
             context.fillStyle = "#9ea7b8";
@@ -134,6 +146,34 @@ define("core/YaceCamera", ["require", "exports", "core/YaceObject"], function (r
             this.context.fillStyle = "#000000";
             this.context.fillRect(0, 0, scene.canvas.width, scene.canvas.height);
             this.context.drawImage(scene.canvas, (this.position.x - (this.canvas.width / 2 / this.scale.x)), (this.position.y - (this.canvas.height / 2 / this.scale.y)), this.canvas.width / this.scale.x, this.canvas.height / this.scale.y, 0, 0, this.canvas.width, this.canvas.height);
+        };
+        YaceCamera.prototype.dragStart = function (event) {
+            this.mousePoint = new Point2D_2.default(event.pageX, event.pageY);
+            this.cameraPoint = new Point2D_2.default(this.position.x, this.position.y);
+        };
+        YaceCamera.prototype.dragEnd = function () {
+            this.mousePoint = this.cameraPoint = null;
+        };
+        YaceCamera.prototype.dragEvent = function (event) {
+            if (Point2D_2.default.equals(Point2D_2.default.ZERO, this.dragSpeed)) {
+                return;
+            }
+            if (this.mousePoint == null) {
+                return;
+            }
+            this.position = new Point2D_2.default(this.cameraPoint.x - (event.pageX - this.mousePoint.x) * this.dragSpeed.x / this.scale.x, this.cameraPoint.y - (event.pageY - this.mousePoint.y) * this.dragSpeed.y / this.scale.y);
+        };
+        YaceCamera.prototype.zoomEvent = function (event) {
+            if (Point2D_2.default.equals(Point2D_2.default.ZERO, this.zoomSpeed)) {
+                return;
+            }
+            var offset = new Point2D_2.default(event.originalEvent["offsetX"] - this.canvas.width / 2, event.originalEvent["offsetY"] - this.canvas.height / 2);
+            var point = new Point2D_2.default(this.position.x + offset.x / this.scale.x, this.position.y + offset.y / this.scale.y);
+            var operand = event.originalEvent["deltaY"] < 0
+                ? Point2D_2.default.substract(Point2D_2.default.ONE, this.zoomSpeed)
+                : Point2D_2.default.concat(Point2D_2.default.ONE, this.zoomSpeed);
+            this.scale = Point2D_2.default.multiply(this.scale, operand);
+            this.position = new Point2D_2.default(point.x - offset.x / this.scale.x, point.y - offset.y / this.scale.y);
         };
         return YaceCamera;
     }(YaceObject_1.default));

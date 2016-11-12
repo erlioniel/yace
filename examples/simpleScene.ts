@@ -16,8 +16,10 @@ export default class SimpleScene {
 
         // Prepare camera
         let canvas = $('#canvas');
-        let camera = new YaceCamera(<HTMLCanvasElement>canvas.get(0));
+        let camera = new YaceCamera(canvas);
         camera.scale = new Point2D(0.5, 0.5);
+        camera.dragSpeed = Point2D.ONE;
+        camera.zoomSpeed = new Point2D(0.1, 0.1);
         scene.addCamera(camera);
 
         // Add simple sprite
@@ -29,47 +31,6 @@ export default class SimpleScene {
 
         scene.onUpdate();
 
-        let mouse_point, camera_point;
 
-        // Bind camera control
-        canvas
-            .bind("mousedown", function(event) {
-                mouse_point = new Point2D(event.pageX, event.pageY);
-                camera_point = new Point2D(camera.position.x, camera.position.y);
-            })
-            .bind("mouseup mouseleave", function () {
-                mouse_point = camera_point = null;
-            })
-            .bind("mousemove", function (event) {
-                if(mouse_point != null) {
-                    let newX = camera_point.x - (event.pageX - mouse_point.x) / camera.scale.x;
-                    let newY = camera_point.y - (event.pageY - mouse_point.y) / camera.scale.y;
-                    camera.position = new Point2D(newX, newY);
-                }
-            })
-            .bind("wheel", function (event) {
-                // Save current focus
-                let c = canvas.get(0) as HTMLCanvasElement;
-                let offset = new Point2D(
-                    event.originalEvent["offsetX"] - c.width / 2,
-                    event.originalEvent["offsetY"] - c.height / 2
-                );
-                let point = new Point2D(
-                    camera.position.x + offset.x / camera.scale.x,
-                    camera.position.y + offset.y / camera.scale.y
-                );
-
-                // Scale
-                let operand = event.originalEvent["deltaY"] < 0
-                    ? new Point2D(0.9, 0.9)
-                    : new Point2D(1.1, 1.1);
-                camera.scale = Point2D.multiply(camera.scale, operand);
-
-                // Offset camera
-                camera.position = new Point2D(
-                    point.x - offset.x / camera.scale.x,
-                    point.y - offset.y / camera.scale.y
-                );
-            });
     }
 }

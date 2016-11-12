@@ -16,6 +16,8 @@ declare module "core/YaceBehavior" {
 }
 declare module "utils/Point2D" {
     export default class Point2D {
+        static ONE: Point2D;
+        static ZERO: Point2D;
         x: number;
         y: number;
         constructor(x: number, y: number);
@@ -23,6 +25,7 @@ declare module "utils/Point2D" {
         static substract(v1: Point2D, v2: Point2D): Point2D;
         static multiply(v1: Point2D, v2: Point2D): Point2D;
         static divide(v1: Point2D, v2: Point2D): Point2D;
+        static equals(v1: Point2D, v2: Point2D): boolean;
     }
 }
 declare module "core/YaceObject" {
@@ -55,11 +58,20 @@ declare module "core/YaceContainer" {
 declare module "core/YaceCamera" {
     import YaceObject from "core/YaceObject";
     import YaceScene from "core/YaceScene";
+    import Point2D from "utils/Point2D";
     export default class YaceCamera extends YaceObject {
         private canvas;
         private context;
-        constructor(canvas: HTMLCanvasElement);
+        dragSpeed: Point2D;
+        zoomSpeed: Point2D;
+        private mousePoint;
+        private cameraPoint;
+        constructor(canvas: JQuery);
         draw(scene: YaceScene, context: CanvasRenderingContext2D): void;
+        private dragStart(event);
+        private dragEnd();
+        private dragEvent(event);
+        private zoomEvent(event);
     }
 }
 declare module "core/YaceScene" {
