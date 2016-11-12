@@ -60,6 +60,7 @@ declare module "core/YaceCamera" {
     export default class YaceCamera extends YaceObject implements Boxed {
         private canvas;
         private context;
+        backgroundColor: string | CanvasGradient | CanvasPattern;
         dragSpeed: Point2D;
         zoomSpeed: Point2D;
         private mousePoint;

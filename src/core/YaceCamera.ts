@@ -10,6 +10,8 @@ export default class YaceCamera extends YaceObject implements Boxed {
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
 
+    public backgroundColor: string | CanvasGradient | CanvasPattern = null
+
     public dragSpeed: Point2D = Point2D.ZERO;
     public zoomSpeed: Point2D = Point2D.ZERO;
 
@@ -33,8 +35,12 @@ export default class YaceCamera extends YaceObject implements Boxed {
     public draw(scene: YaceScene, context: CanvasRenderingContext2D): boolean {
         this.dirty = false;
 
-        this.context.fillStyle = "#000000";
-        this.context.fillRect(0, 0, scene.canvas.width, scene.canvas.height);
+        if(this.backgroundColor == null) {
+            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        } else {
+            this.context.fillStyle = this.backgroundColor;
+            this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        }
 
         let box = this.box();
         console.log("CAMERA DRAW CALL");

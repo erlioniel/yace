@@ -102,6 +102,7 @@ define("core/YaceCamera", ["require", "exports", "core/YaceObject", "utils/Point
         __extends(YaceCamera, _super);
         function YaceCamera(canvas) {
             _super.call(this);
+            this.backgroundColor = null;
             this.dragSpeed = Point2D_2.default.ZERO;
             this.zoomSpeed = Point2D_2.default.ZERO;
             this.canvas = canvas.get(0);
@@ -114,8 +115,13 @@ define("core/YaceCamera", ["require", "exports", "core/YaceObject", "utils/Point
         }
         YaceCamera.prototype.draw = function (scene, context) {
             this.dirty = false;
-            this.context.fillStyle = "#000000";
-            this.context.fillRect(0, 0, scene.canvas.width, scene.canvas.height);
+            if (this.backgroundColor == null) {
+                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            }
+            else {
+                this.context.fillStyle = this.backgroundColor;
+                this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            }
             var box = this.box();
             console.log("CAMERA DRAW CALL");
             this.context.drawImage(scene.canvas, box.min.x, box.min.y, box.max.x - box.min.x, box.max.y - box.min.y, 0, 0, this.canvas.width, this.canvas.height);
