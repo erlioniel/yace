@@ -15,7 +15,6 @@ define(["require", "exports", "core/YaceScene", "core/YaceObject", "renders/Imag
             sprite.addBehavior(new ImageRenderer_1.default('images/train.jpg'));
             sprite.position = new Point2D_1.default(170, 120);
             scene.add(sprite);
-            scene.onUpdate();
         };
         return SimpleScene;
     }());

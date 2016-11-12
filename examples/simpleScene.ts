@@ -26,11 +26,7 @@ export default class SimpleScene {
         let sprite = new YaceObject();
         sprite.addBehavior(new ImageRenderer('images/train.jpg'));
         sprite.position = new Point2D(170, 120);
-        // sprite.scale = new Point2D(0.5, 0.5);
         scene.add(sprite);
-
-        scene.onUpdate();
-
 
     }
 }
