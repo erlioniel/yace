@@ -9,6 +9,7 @@ import PolyRenderer from "renders/PolyRenderer";
 import BoundsBehavior from "behaviors/BoundsBehavior";
 import Point2D from "utils/Point2D";
 import Box2D from "utils/Box2D";
+import ImageUtils from "../src/utils/ImageUtils";
 
 declare let $: JQueryStatic;
 
@@ -45,12 +46,12 @@ export default class SimpleScene {
         poly.position = new Point2D(0, 0);
         scene.add(poly);
 
-        setTimeout(function() {
+        ImageUtils.load('images/train.jpg', (image) => {
             // Add simple sprite
             let sprite = new YaceObject();
-            sprite.addBehavior(new ImageRenderer('images/train.jpg'));
+            sprite.addBehavior(new ImageRenderer(image));
             sprite.position = new Point2D(170, 120);
             scene.add(sprite);
-        }, 1000);
+        });
     }
 }

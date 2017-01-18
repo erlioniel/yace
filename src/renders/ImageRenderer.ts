@@ -6,18 +6,14 @@ export default class ImageRenderer extends YaceBehavior implements Drawable {
     public image: HTMLImageElement;
     public dirty: boolean;
 
-    constructor(url: string) {
+    constructor(image: HTMLImageElement) {
         super();
-        this.image = new Image();
-        this.image.src = url;
-        this.image.onload = function () {
-            this.dirty = true;
-        }.bind(this);
+        this.image = image;
+        this.dirty = true;
     }
 
     draw(scene: YaceScene, context: CanvasRenderingContext2D): boolean {
         this.dirty = false;
-        console.log("IMAGE DRAW CALL");
         context.drawImage(
             this.image,
 

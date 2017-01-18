@@ -154,6 +154,7 @@ define("core/YaceCamera", ["require", "exports", "core/YaceObject", "utils/Point
                 return;
             }
             this.dirty = true;
+            event.preventDefault();
             var offset = new Point2D_2.default(event.originalEvent["offsetX"] - this.canvas.width / 2, event.originalEvent["offsetY"] - this.canvas.height / 2);
             var point = new Point2D_2.default(this.position.x + offset.x / this.scale.x, this.position.y + offset.y / this.scale.y);
             var operand = event.originalEvent["deltaY"] < 0
@@ -337,17 +338,13 @@ define("renders/ImageRenderer", ["require", "exports", "core/YaceBehavior"], fun
     "use strict";
     var ImageRenderer = (function (_super) {
         __extends(ImageRenderer, _super);
-        function ImageRenderer(url) {
+        function ImageRenderer(image) {
             _super.call(this);
-            this.image = new Image();
-            this.image.src = url;
-            this.image.onload = function () {
-                this.dirty = true;
-            }.bind(this);
+            this.image = image;
+            this.dirty = true;
         }
         ImageRenderer.prototype.draw = function (scene, context) {
             this.dirty = false;
-            console.log("IMAGE DRAW CALL");
             context.drawImage(this.image, 0, 0, this.image.width, this.image.height, this.object.position.x * this.object.scale.x, this.object.position.y * this.object.scale.y, this.image.width * this.object.scale.x, this.image.height * this.object.scale.y);
             return true;
         };
@@ -406,5 +403,72 @@ define("renders/PolyRenderer", ["require", "exports", "core/YaceBehavior", "util
     }(YaceBehavior_3.default));
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = PolyRenderer;
+});
+define("utils/TileSet", ["require", "exports", "utils/Point2D", "utils/Box2D"], function (require, exports, Point2D_6, Box2D_3) {
+    "use strict";
+    var TileSet = (function () {
+        function TileSet(image) {
+            this.tiles = [];
+            this.image = image;
+        }
+        TileSet.prototype.tile = function (idx) {
+            return this.tiles[idx];
+        };
+        TileSet.simpleGrid = function (image, grid) {
+            var tileSet = new TileSet(image);
+            for (var k = 0; k + 1 < Math.floor(tileSet.image.height / grid.y); k++) {
+                for (var i = 0; i + 1 < Math.floor(tileSet.image.width / grid.x); i++) {
+                    tileSet.tiles.push(new Box2D_3.default(new Point2D_6.default(i * grid.x, k * grid.y), new Point2D_6.default((i + 1) * grid.x, (k + 1) * grid.y)));
+                }
+            }
+            return tileSet;
+        };
+        return TileSet;
+    }());
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = TileSet;
+});
+define("renders/TileRenderer", ["require", "exports", "core/YaceBehavior"], function (require, exports, YaceBehavior_4) {
+    "use strict";
+    var TileRenderer = (function (_super) {
+        __extends(TileRenderer, _super);
+        function TileRenderer(tileSet) {
+            _super.call(this);
+            this.active = 0;
+            this.tileSet = tileSet;
+            this.dirty = true;
+        }
+        TileRenderer.prototype.activate = function (active) {
+            this.active = active;
+        };
+        TileRenderer.prototype.draw = function (scene, context) {
+            this.dirty = false;
+            context.drawImage(this.tileSet.image, this.tileSet.tile(this.active).min.x, this.tileSet.tile(this.active).min.y, this.tileSet.tile(this.active).width(), this.tileSet.tile(this.active).height(), this.object.position.x * this.object.scale.x, this.object.position.y * this.object.scale.y, this.tileSet.tile(this.active).width() * this.object.scale.x, this.tileSet.tile(this.active).height() * this.object.scale.y);
+            return true;
+        };
+        TileRenderer.prototype.isDirty = function () {
+            return this.dirty;
+        };
+        return TileRenderer;
+    }(YaceBehavior_4.default));
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = TileRenderer;
+});
+define("utils/ImageUtils", ["require", "exports"], function (require, exports) {
+    "use strict";
+    var ImageUtils = (function () {
+        function ImageUtils() {
+        }
+        ImageUtils.load = function (url, callback) {
+            var image = new Image();
+            image.src = url;
+            image.onload = function () {
+                callback(image);
+            }.bind(this);
+        };
+        return ImageUtils;
+    }());
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = ImageUtils;
 });
 //# sourceMappingURL=yace.js.map

@@ -1,4 +1,4 @@
-define(["require", "exports", "core/YaceScene", "core/YaceObject", "core/YaceCamera", "renders/ImageRenderer", "renders/PolyRenderer", "behaviors/BoundsBehavior", "utils/Point2D", "utils/Box2D"], function (require, exports, YaceScene_1, YaceObject_1, YaceCamera_1, ImageRenderer_1, PolyRenderer_1, BoundsBehavior_1, Point2D_1, Box2D_1) {
+define(["require", "exports", "core/YaceScene", "core/YaceObject", "core/YaceCamera", "renders/ImageRenderer", "renders/PolyRenderer", "behaviors/BoundsBehavior", "utils/Point2D", "utils/Box2D", "../src/utils/ImageUtils"], function (require, exports, YaceScene_1, YaceObject_1, YaceCamera_1, ImageRenderer_1, PolyRenderer_1, BoundsBehavior_1, Point2D_1, Box2D_1, ImageUtils_1) {
     "use strict";
     var SimpleScene = (function () {
         function SimpleScene(selector) {
@@ -26,12 +26,12 @@ define(["require", "exports", "core/YaceScene", "core/YaceObject", "core/YaceCam
             poly.addBehavior(polyRenderer);
             poly.position = new Point2D_1.default(0, 0);
             scene.add(poly);
-            setTimeout(function () {
+            ImageUtils_1.default.load('images/train.jpg', function (image) {
                 var sprite = new YaceObject_1.default();
-                sprite.addBehavior(new ImageRenderer_1.default('images/train.jpg'));
+                sprite.addBehavior(new ImageRenderer_1.default(image));
                 sprite.position = new Point2D_1.default(170, 120);
                 scene.add(sprite);
-            }, 1000);
+            });
         }
         return SimpleScene;
     }());

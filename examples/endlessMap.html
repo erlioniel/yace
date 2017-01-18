@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>YACE - Endless map example</title>
+    <script language="javascript" src="../vendor/jquery/dist/jquery.min.js"></script>
+    <script language="javascript" src="../vendor/requirejs/require.js"></script>
+    <script language="javascript" src="../yace.js"></script>
+    <script language="javascript">
+			requirejs(['endlessMap'], function(Scene) {
+				new Scene.default('#canvas');
+			});
+    </script>
+</head>
+<body>
+<h1>YACE - Endless map</h1>
+<canvas width="1000" height="700" id="canvas"></canvas>
+</body>
+</html>

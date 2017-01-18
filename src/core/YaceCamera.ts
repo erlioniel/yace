@@ -10,7 +10,7 @@ export default class YaceCamera extends YaceObject implements Boxed {
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
 
-    public backgroundColor: string | CanvasGradient | CanvasPattern = null
+    public backgroundColor: string | CanvasGradient | CanvasPattern = null;
 
     public dragSpeed: Point2D = Point2D.ZERO;
     public zoomSpeed: Point2D = Point2D.ZERO;
@@ -108,6 +108,7 @@ export default class YaceCamera extends YaceObject implements Boxed {
         }
 
         this.dirty = true;
+        event.preventDefault();
 
         // Save current focus
         let offset = new Point2D(

@@ -140,7 +140,7 @@ declare module "renders/ImageRenderer" {
     export default class ImageRenderer extends YaceBehavior implements Drawable {
         image: HTMLImageElement;
         dirty: boolean;
-        constructor(url: string);
+        constructor(image: HTMLImageElement);
         draw(scene: YaceScene, context: CanvasRenderingContext2D): boolean;
         isDirty(): boolean;
     }
@@ -159,5 +159,36 @@ declare module "renders/PolyRenderer" {
         constructor(points: Point2D[]);
         draw(scene: YaceScene, context: CanvasRenderingContext2D): boolean;
         isDirty(): boolean;
+    }
+}
+declare module "utils/TileSet" {
+    import Point2D from "utils/Point2D";
+    import Box2D from "utils/Box2D";
+    export default class TileSet {
+        image: HTMLImageElement;
+        tiles: Box2D[];
+        constructor(image: HTMLImageElement);
+        tile(idx: number): Box2D;
+        static simpleGrid(image: HTMLImageElement, grid: Point2D): TileSet;
+    }
+}
+declare module "renders/TileRenderer" {
+    import YaceBehavior from "core/YaceBehavior";
+    import Drawable from "core/interfaces/Drawable";
+    import YaceScene from "core/YaceScene";
+    import TileSet from "utils/TileSet";
+    export default class TileRenderer extends YaceBehavior implements Drawable {
+        tileSet: TileSet;
+        dirty: boolean;
+        active: number;
+        constructor(tileSet: TileSet);
+        activate(active: number): void;
+        draw(scene: YaceScene, context: CanvasRenderingContext2D): boolean;
+        isDirty(): boolean;
+    }
+}
+declare module "utils/ImageUtils" {
+    export default class ImageUtils {
+        static load(url: string, callback: (HTMLImageElement) => void): void;
     }
 }
